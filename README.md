@@ -7,3 +7,5 @@ Code modified from files obtained at https://ameriflux.lbl.gov/real-time-data-vi
 - db_config.py: function to create field definitions for database.
 - diagdecode.py: decodes Campbell and Licor diagnostic codes.
 - insertWLEF.py and insertKernza.py: two functions that are run by cron to insert data into the database.
+
+eventually paste outline from GDrive here 
