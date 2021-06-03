@@ -24,18 +24,21 @@ from db_config import pick_config
 # cq_sc_tmpl  =  'SELECT mean({variable}) INTO {db}.{policy}.fastds4w FROM {db}.{defPolicy}.{measurement} GROUP BY time({duration}),*'
 # cqname_tmpl  =  '{var}_{duration}_cq' 
 
-# read toa5 file and use variable names to create database
-# structure:
-# - database
-# -- measurment (fastdata, slowdata)
-#    each measurement will have a set of tags associated with it to define its meta properties
-#    tags are defined in the db_config.py and are listed in the function pick_config 
-#    Pick_config uses filepath name to pick the correct tags
-# --- fields (variables in the database)
-
 
 def makedb_toa5(filepath):
-    """Create database and retention policy, import variable names"""
+    """Create database and retention policy, import variable names
+    
+    read toa5 file and use variable names to create database
+    CAUTION: OVERWRITES EXISTING DB OF THE SAME NAME (only call once)
+
+    structure:
+    - database
+    -- measurment (fastdata, slowdata)
+       each measurement will have a set of tags associated with it to define its meta properties
+       tags are defined in the db_config.py and are listed in the function pick_config 
+       Pick_config uses filepath name to pick the correct tags
+    --- fields (variables in the database)
+    """
 
     # import variable names and data, parse
     (dbname,measurement,tag_dict) = pick_config(filepath)
