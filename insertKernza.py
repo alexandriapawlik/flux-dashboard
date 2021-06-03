@@ -1,3 +1,11 @@
+"""Insert data into db
+
+author: Alex Pawlik - apawlik@umich.edu - github.com/alexandriapawlik
+purpose: run by cron to insert data into the database
+source: code modified from insertKernza.py obtained at 
+    https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafana/
+"""
+
 from datetime import datetime, timedelta
 from glob import glob 
 import sys
@@ -5,7 +13,7 @@ sys.path.insert(2,'/home/jthom/influxDB_v2_0')
 import os
 from db_tools import *
 from db_config import *
-from campbellread_v2_0 import toa5head
+from campbellread import toa5head
 
 # start time for operation
 date = datetime.utcnow()

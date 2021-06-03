@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+"""Decode Campbell and Licor diagnostic codes
+
+source: code copied from diagdecode.py obtained at 
+    https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafana/
+"""
+
 import sys
 import re
 import logging
@@ -8,19 +14,16 @@ from datetime import datetime, timedelta
 import binascii
 import numpy as np
 
-#
 # input for all diagnostic decodes need to be arrays
 # even a single item array [x, y, z, ....] or [z,]
 
-
-#
-# LI7700 diagnostics
-#
-#
-#diag_7700 = tsarray[tskeys.index('Diag_li7700')]
 def dd7700(stamp,diag_7700):
-#
-# initialize the variables
+    """LI7700 diagnostics parsing
+    
+    diag_7700 = tsarray[tskeys.index('Diag_li7700')]
+    """
+    
+    # initialize the variables
     records=[]
     variablenames=['not_ready_77', \
                    'nosignal_77', \
@@ -75,17 +78,18 @@ def dd7700(stamp,diag_7700):
     return records
 
 
-#
-# CSAT 3 diagnostics
-#
-#csat_diag=tsarray[tskeys.index('diag_csat')]
-
 def ddcsat3(stamp,csat_diag):
-#61502 : anemometer does not respond
-#61440 : lost trigger
-#61503 : no data available
-#61441 : SDM Comms error
-#61442 : Wrong CSAT3 embedded code
+    """CSAT3 diagnostics parsing
+    
+    csat_diag=tsarray[tskeys.index('diag_csat')]
+
+    #61502 : anemometer does not respond
+    #61440 : lost trigger
+    #61503 : no data available
+    #61441 : SDM Comms error
+    #61442 : Wrong CSAT3 embedded code
+    """
+
     records=[] 
     variablenames=['ux_range_c3', \
              'uy_range_c3', \
@@ -144,16 +148,14 @@ def ddcsat3(stamp,csat_diag):
         records.append((stamp[i],data)) 
 
     return records
-#
-# LI7500 diaganostics
-#
-# input the original diagnostic value direct from sensor
+
+
 def dd7500(stamp,diag_irga):
-#
-# LI7500 diaganostics
-#
-# 
-# 
+    """LI7500 diaganostics parsing
+    
+    input the original diagnostic value direct from sensor
+    """
+
     records=[]
     variablenames=['signalstrength_75', \
                    'sync_75', \
@@ -178,11 +180,12 @@ def dd7500(stamp,diag_irga):
 
     return records
 
-# 
-# 
-# for now: change the diagnostic value back to its default value (this may change in the future)
-#
+
 def dd7200(stamp,diag_irga):
+    """change diagnostic value back to default value 
+    
+    (this may change in the future)
+    """
 
     records=[]
     variablenames=['signalstrength_72', \
