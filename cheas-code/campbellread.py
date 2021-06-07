@@ -3,7 +3,7 @@
 """Read data logger files and store data
 
 author: Alex Pawlik - apawlik@umich.edu - github.com/alexandriapawlik
-purpose: read TOA5 files and update the storage of data into Pandas DataFrames
+purpose: read files and convert to Pandas dataframe
 source: code modified from campbellread_v2_0.py obtained at 
     https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafana/
 """
@@ -21,18 +21,23 @@ import pandas as pd
 # constants
 csibasedate = '1990-01-01:000000'  # base time on Campbell scientific data loggers (CSI epoch)
 csiepochstart = 631152000   # seconds difference between unix epoch 1970-01-01,00:00:00 and CSI epoch 1990-01-01, 00:00:00
-LOG = logging.getLogger(__name__)  # ???
+LOG = logging.getLogger(__name__)  # connect to logger?
 
 
 def toa5head(filepth):
-    """File parsing?"""
+    """Parse file and headers and turn into Pandas dataframe
+    
+    Returns: Pandas df"""
 
+    # extract file type
     lines = open(filepth,'rt').readlines()
     lineno = 0
     line = lines[lineno]
     line = line[:-2]
     line = line.replace('"','')
     filetype = line.split(',')[0]
+
+    # extract column headers
     lineno += 1
     line = lines[lineno]
     line = line[:-2]
@@ -40,31 +45,37 @@ def toa5head(filepth):
     var_name = line.split(',') 
     lineno += 1
 
+    # extract units from TOA5 files
     if filetype == 'TOA5':
         line = lines[lineno]
         line = line.replace('\n','')
         line = line.replace('\r','')
         line = line.replace('"','')
         units = line.split(',')
-        lineno+ = 2
+        lineno += 2
 
+    # timestamp variable must be separate
     data_only_var_name = var_name[2:]
     stamp = []
-    L = []
+    L = []  # will be converted to Pandas df
 
+    # TODO handle timestamp here
+
+    # fill list with an empty list per variable
     for i in range(len(data_only_var_name)): 
-       L.append([]) 
+        L.append([]) 
+    # add each observation to list of lists
     for line in lines[lineno:]:
         line = line.replace('"','')
         line = line.replace('\n','')
         line = line.replace('\r','')
         data_list = line.split(',')
-        # time stamp for data
+        # store time stamp for data
         stamp.append(data_list[0])
-        # create a data only list
+        # remove timestamp from data list
         data_only = data_list[2:]
  
-        # how do I deal with NAN in the data string
+        # fill list while dealing with NaN in data
         for i,v in enumerate(data_only):
             try:
                dataval = float(v)
@@ -77,6 +88,8 @@ def toa5head(filepth):
     L = np.transpose(np.array(L))
     stampIDX = pd.DatetimeIndex(stamp)
     records = pd.DataFrame(L,index = stampIDX,columns = data_only_var_name)
+
+    # # mutate existing fields to create fields for any additional calculations
     # records['ws'] = np.sqrt(records.Ux * records.Ux + records.Uy * records.Uy)
     # records['wd'] = np.mod(np.arctan2(data.Uy,data.Ux) * 180/np.pi + 190,360)
 
@@ -102,7 +115,7 @@ def parse_csi_value(sval):
 
 
 def readtob1file(fileptr):
-    """Read something? """
+    """Read something? unused function"""
 
     records = []
     fileptr.seek(0)
@@ -132,13 +145,13 @@ def readtob1file(fileptr):
 
     # move through the string reading each data type
     while i<len(data):
-       dataline = []
-       for dt in types:
-           if dt.rfind('FP2') =  = 0:
+        dataline = []
+        for dt in types:
+            if dt.rfind('FP2') == 0:
                dataline.append(parse_csi_value(binascii.hexlify(data[i:i+CSItypelen.get(dt)])))
-           else:
+            else:
                dataline.append(struct.unpack(CSItypes.get(dt),data[i:i+CSItypelen.get(dt)])[0])
-           i = i+CSItypelen.get(dt)
+            i = i+CSItypelen.get(dt)
 
         # make the time stamp
         stamp = datetime.utcfromtimestamp(dataline[0] + csiepochstart)

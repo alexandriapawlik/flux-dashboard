@@ -90,7 +90,7 @@ def dataQC(data,tag_dict):
     can store offsets in the tag_dict for the sensor
     """
 
-    if tag_dict.get('site') == '1' and tag_dict.get('datatype') == 'met':
+    # if tag_dict.get('site') == '1' and tag_dict.get('datatype') == 'met':
         # TODO
         # data.u = data.u/100.
         # data.v = data.v/100.
@@ -131,6 +131,7 @@ def writedata_toa5(filepath):
     client = DataFrameClient(host = 'localhost', port = 8086, database = dbname)
 
     # write panda dataframe to the database
+    # TODO: check this fn
     rtn_write = client.write_points(data, measurement = measurement, tags = tag_dict,
         database = dbname, retention_policy = rp, protocol = protocol)
 

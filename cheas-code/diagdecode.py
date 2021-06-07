@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 """Decode Campbell and Licor diagnostic codes
+(not used in any other code?)
 
 source: code copied from diagdecode.py obtained at 
     https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafana/

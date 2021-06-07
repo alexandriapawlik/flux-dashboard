@@ -13,7 +13,7 @@ def pick_config(fname):
     measString = []
     tag_dict = []
 
-    if fname.find('test_file')>= 0:
+    if fname.find('test_file') >= 0:
         dbname = 'testdb'
         measString = 'fastdata'
         tag_dict = {'site':'Ameriflux', 'level':'46m', 'datatype':'met'}
