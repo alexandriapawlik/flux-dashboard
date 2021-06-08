@@ -21,7 +21,7 @@ import pandas as pd
 # constants
 csibasedate = '1990-01-01:000000'  # base time on Campbell scientific data loggers (CSI epoch)
 csiepochstart = 631152000   # seconds difference between unix epoch 1970-01-01,00:00:00 and CSI epoch 1990-01-01, 00:00:00
-LOG = logging.getLogger(__name__)  # connect to logger?
+LOG = logging.getLogger(__name__)  # logging?
 
 
 def toa5head(filepth):
