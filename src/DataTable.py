@@ -1,9 +1,10 @@
-"""DataTable base class and all DataTable derived classes"""
+"""DataTable.py: DataTable base class and all DataTable derived classes
 
-import os
-import sys
-import logging # put error messages in log
-import datetime
+author: Alexandria Pawlik (apawlik@umich.edu) 
+project: github.com/alexandriapawlik/flux-dashboard"""
+
+
+from datetime import datetime
 import pandas as pd
 import numpy as np
 
@@ -17,11 +18,6 @@ class DataTable:
 
     def __init__(self, Filename):
         """Create a DataTable object, store filename"""
-        
-        # check that file exists, log stack trace and exit if it doesn't
-        if not os.path.isfile(Filename):
-            logging.exception("File path {} does not exist.".format(Filename))
-            sys.exit()
 
         # set instance var
         self.filename = Filename    
@@ -38,9 +34,12 @@ class DataTable:
                 line = line.split(',')
                 temp = []
 
-                # TODO fix timestamp format - can we just set it differently from logger?
+                # fix timestamp format 
+                # TODO can we just set it differently from logger?
+                ts = datetime.strptime(line[0], '%Y-%m-%d %H:%M:%S')
+
                 # extract timestamp
-                all_times.append(line[0])
+                all_times.append(ts)
                 line = line[1:]
 
                 # parse observation value by value: convert values to float or NaN
@@ -68,10 +67,10 @@ class TestFile(DataTable):
     no header in file,
     column order: (Timestamp, Status, Plot, Flux Value)"""
 
-    # CONSTANT class vars, specific to this file type
+    # CONSTANT private class vars, specific to this file type
     _col_names = ["Plot", "Flux_Value"]   # names of cols we want to keep, without timestamp column
     _delete_cols = [1]  # indices of cols we won't need
-    # TODO: store db options based on file type, for public use
+    # TODO: store db configs based on file type, for public use
 
     def __init__(self, Filename):
         """Create a TestFile object, store filename"""
