@@ -15,3 +15,5 @@ DB structure:
        tags are defined in the db_config.py and are listed in the function pick_config 
        Pick_config uses filepath name to pick the correct tags
         - fields (variables in the database)
+
+Lines where changes need to occur for a new file type, etc. are led by the string ####admin

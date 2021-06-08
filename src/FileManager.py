@@ -10,11 +10,11 @@ import logging # put error messages in log
 import pandas as pd
 import numpy as np
 from influxdb import DataFrameClient, InfluxDBClient
-import DataTable
+from . import DataTable
 
 
 class FileManager:
-    """File manager: owns DataTable object and handles its access to influxDB.
+    """File manager: wraps DataTable-derived object and handles its access to influxDB.
 
     this is the only class that the driver should use - 
     driver should init then call new_db and/or update_db"""
@@ -32,7 +32,7 @@ class FileManager:
         # init the appropriate version of DataTable object and store it
         if filetype == '.tst':
             self.DT = DataTable.TestFile(filename)
-        ### ADD NEW FILE TYPES HERE
+        ####admin ADD IF CLAUSE FOR EACH NEW FILE TYPE HERE
         else:  # quit if we don't recognize the file type
             logging.exception("File type {} from file {} not accepted.".format(filetype, filename))
             sys.exit()

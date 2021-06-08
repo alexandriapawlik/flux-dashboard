@@ -12,6 +12,7 @@ import numpy as np
 class DataTable:
     """DataTable: common base class for all data table file types.
 
+    (only its derived classes are meant to be used by FileManager)
     owns file info and access to data file,
     will not access influxDB at all,
     shouldn't be accessed by driver directly"""
@@ -37,11 +38,13 @@ class DataTable:
                 # fix timestamp format 
                 # TODO can we just set it differently from logger?
                 ts = datetime.strptime(line[0], '%Y-%m-%d %H:%M:%S')
+                # ts = datetime.strptime(line[0], '%Y-%m-%d')
 
                 # extract timestamp
                 all_times.append(ts)
                 line = line[1:]
 
+                # TODO this should allow strings also
                 # parse observation value by value: convert values to float or NaN
                 for i,v in enumerate(line):
                     try:
@@ -59,13 +62,14 @@ class DataTable:
 
 
 ## define derived classes, one per differing file type/format/variables
-
+# if base class doesn't match your file format, just create an all-new class with same fn signatures
 
 class TestFile(DataTable):
     """derived class for test run filetype (.tst)
     
     no header in file,
-    column order: (Timestamp, Status, Plot, Flux Value)"""
+    input columns: (Timestamp, Status, Plot, Flux Value)
+    output columns: (Plot, Flux_Value)"""
 
     # CONSTANT private class vars, specific to this file type
     _col_names = ["Plot", "Flux_Value"]   # names of cols we want to keep, without timestamp column
@@ -86,12 +90,16 @@ class TestFile(DataTable):
         ### derived class stuff (specific to file type)
 
         # remove extra cols
-        self.line_array = np.delete(self.line_array, self._delete_cols)
+        self.line_array = np.delete(self.line_array, self._delete_cols, axis = 1)
         # fix any data types here if necessary
-        # TODO
+        # 
         # create Pandas df
         df = pd.DataFrame(self.line_array, index = self.time_array, columns = self._col_names)
         # mutate to create any new columns
         df['Sum'] = df.Plot + df.Flux_Value
         # qa/qc that needs to be done for this file type
-        # TODO
+        # 
+
+
+####admin ADD NEW DERIVED CLASS HERE FOR EACH NEW FILE TYPE
+# TODO template for new derived classes
