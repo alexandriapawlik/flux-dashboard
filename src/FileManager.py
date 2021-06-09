@@ -12,7 +12,7 @@ import numpy as np
 from influxdb_client import InfluxDBClient, BucketRetentionRules
 from influxdb_client.client.write_api import SYNCHRONOUS
 from . import DataTable
-from . import secret  # REQUIRED make your own copy of this using secret_copy.py
+from .secret import Secret  # REQUIRED make your own copy of this using secret_copy.py
 
 
 class FileManager:
@@ -27,6 +27,7 @@ class FileManager:
 
         # determine file type
         filetype = os.path.splitext(filename)
+        filetype = filetype[1]
 
         # init the appropriate version of DataTable object and store it
         if filetype == '.tst':
@@ -48,12 +49,12 @@ class FileManager:
         ####admin create and assign new retention policies here if needed
        
         # create connection
-        client = InfluxDBClient(url = secret.url, token = secret.token, org = secret.org)
+        client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
         
         # try to add new bucket/database
         buckets_api = client.buckets_api()
         try:
-            org = client.organizations_api().find_organizations(org = secret.org)[0]  # get Org ID from API (different than org name)
+            org = client.organizations_api().find_organizations(org = Secret.org)[0]  # get Org ID from API (different than org name)
             new_bucket = buckets_api.create_bucket(bucket_name = self.dt.dbname, retention_rules=rp, org_id=org.id)
             logging.info("SUCCESS - created bucket {}".format(new_bucket))
         except:  
@@ -75,12 +76,12 @@ class FileManager:
         df = self.dt.create_df()
 
         # create connection
-        client = InfluxDBClient(url = secret.url, token = secret.token, org = secret.org)
+        client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
 
         # try to write panda dataframe to the database
         try:
             write_client = client.write_api(write_options = SYNCHRONOUS)
-            write_client.write(self.dt.dbname, secret.org, record = df, data_frame_measurement_name = self.dt.msrmt)
+            write_client.write(self.dt.dbname, Secret.org, record = df, data_frame_measurement_name = self.dt.msrmt)
             logging.info("SUCCESS - data from file {} was added to bucket {}".format(self.dt.filename, self.dt.dbname))
         except:
             # if upload fails for some reason

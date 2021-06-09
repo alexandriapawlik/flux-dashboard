@@ -82,7 +82,7 @@ class DemoFile(DataTable):
     delete_cols = [0]  ### indices of cols we won't need, skipping indices of timestamp cols
     # db config options
     dbname = 'demo'  # represents a bucket
-    msrmt = 'Ameriflux_fastdata'  # tag for type of measurement
+    msrmnt = 'Ameriflux_fastdata'  # tag for type of measurement
 
 
     def __init__(self, Filename):
