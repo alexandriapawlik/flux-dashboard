@@ -8,6 +8,7 @@ from datetime import datetime
 import pandas as pd
 import ciso8601  # TODO use for parsing dates
 
+############ base class
 
 class DataTable:
     """DataTable: common base class for all data table file types.
@@ -66,7 +67,7 @@ class DataTable:
         return pd.DataFrame(self.line_array, index = self.time_array)
 
 
-## define derived classes, one per differing file type/format/variables
+############# define derived classes, one per differing file type/format/variables
 
 class DemoFile(DataTable):
     """derived class for demo filetype (.tst)

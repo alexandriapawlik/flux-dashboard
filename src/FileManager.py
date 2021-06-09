@@ -12,19 +12,11 @@ import numpy as np
 from influxdb_client import InfluxDBClient, BucketRetentionRules
 from influxdb_client.client.write_api import SYNCHRONOUS
 from . import DataTable
-from . import secret
+from . import secret  # REQUIRED make your own copy of this using secret_copy.py
 
 
 class FileManager:
     """File manager: wraps DataTable-derived object and handles its access to influxDB"""
-
-
-    # CONSTANTS pulled from secret class not on Github
-    # hard-code them here if you want to run locally, etc.
-    _org = secret.org
-    _token = secret.token
-    _url = secret.url
-
 
     def __init__(self, filename):
         """Create FileManager obj: identify file type and create appropriate DataTable-derived class"""
@@ -41,14 +33,14 @@ class FileManager:
             self.dt = DataTable.DemoFile(filename)
         ####admin ADD IF CLAUSE FOR EACH NEW FILE TYPE HERE
         else:  # quit if we don't recognize the file type
-            logging.error("File type {} from file {} not accepted.".format(filetype, filename))
+            logging.error("File type {} from file {} not yet templated.".format(filetype, filename))
             sys.exit()
 
 
     def new_db(self):
         """"Create new database matching DataTable (derived class) format
 
-        CAUTION: will not work if a database with the same name already exists"""
+        CAUTION: (probably) will not work if a database with the same name already exists"""
 
         # chose retention policy by measurement type
         if self.dt.msrmnt == 'Ameriflux_fastdata':
@@ -56,12 +48,12 @@ class FileManager:
         ####admin create and assign new retention policies here if needed
        
         # create connection
-        client = InfluxDBClient(url = self._url, token = self._token, org = self._org)
+        client = InfluxDBClient(url = secret.url, token = secret.token, org = secret.org)
         
         # try to add new bucket/database
         buckets_api = client.buckets_api()
         try:
-            org = client.organizations_api().find_organizations(org = self._org)[0]  # get Org ID from API (different than org name)
+            org = client.organizations_api().find_organizations(org = secret.org)[0]  # get Org ID from API (different than org name)
             new_bucket = buckets_api.create_bucket(bucket_name = self.dt.dbname, retention_rules=rp, org_id=org.id)
             logging.info("SUCCESS - created bucket {}".format(new_bucket))
         except:  
@@ -83,12 +75,12 @@ class FileManager:
         df = self.dt.create_df()
 
         # create connection
-        client = InfluxDBClient(url = self._url, token = self._token, org = self._org)
+        client = InfluxDBClient(url = secret.url, token = secret.token, org = secret.org)
 
         # try to write panda dataframe to the database
         try:
             write_client = client.write_api(write_options = SYNCHRONOUS)
-            write_client.write(self.dt.dbname, self._org, record = df, data_frame_measurement_name = self.dt.msrmt)
+            write_client.write(self.dt.dbname, secret.org, record = df, data_frame_measurement_name = self.dt.msrmt)
             logging.info("SUCCESS - data from file {} was added to bucket {}".format(self.dt.filename, self.dt.dbname))
         except:
             # if upload fails for some reason
