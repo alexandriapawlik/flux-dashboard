@@ -2,7 +2,6 @@
 
 """Read data logger files and store data
 
-author: Alex Pawlik - apawlik@umich.edu - github.com/alexandriapawlik
 purpose: read files and convert to Pandas dataframe
 source: code modified from campbellread_v2_0.py obtained at 
     https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafana/

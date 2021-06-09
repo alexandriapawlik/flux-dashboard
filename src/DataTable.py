@@ -6,7 +6,7 @@ project: github.com/alexandriapawlik/flux-dashboard"""
 
 from datetime import datetime
 import pandas as pd
-import numpy as np
+import ciso8601  # TODO use for parsing dates
 
 
 class DataTable:
@@ -67,7 +67,6 @@ class DataTable:
 
 
 ## define derived classes, one per differing file type/format/variables
-# if base class doesn't match your file format, just create an all-new class with same fn signatures
 
 class DemoFile(DataTable):
     """derived class for demo filetype (.tst)
@@ -76,10 +75,14 @@ class DemoFile(DataTable):
     input columns: (Timestamp, Status, Plot, Flux Value)
     output columns: (Plot, Flux_Value)"""
 
+
     # CONSTANT class vars, specific to this file type
     col_names = ["Plot", "Flux_Value"]   ### names of cols we want to keep, without timestamp column
     delete_cols = [0]  ### indices of cols we won't need, skipping indices of timestamp cols
-    # TODO: store db configs based on file type, for use by FileManager
+    # db config options
+    dbname = 'demo'  # represents a bucket
+    msrmt = 'Ameriflux_fastdata'  # tag for type of measurement
+
 
     def __init__(self, Filename):
         """Create a DemoFile object, store filename"""
@@ -106,4 +109,6 @@ class DemoFile(DataTable):
 
 
 ####admin ADD NEW DERIVED CLASS HERE FOR EACH NEW FILE TYPE
+# if base class doesn't match your file format, just override fns in derived class
+
 # TODO leave template for new derived classes

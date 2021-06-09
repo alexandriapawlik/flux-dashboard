@@ -1,6 +1,5 @@
 """Insert data into db
 
-author: Alex Pawlik - apawlik@umich.edu - github.com/alexandriapawlik
 purpose: run by cron to insert data into the database
 source: code modified from insertWLEF.py obtained at 
     https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafana/

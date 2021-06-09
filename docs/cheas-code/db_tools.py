@@ -2,7 +2,6 @@
 
 """Import data from logger files into database
 
-author: Alex Pawlik - apawlik@umich.edu - github.com/alexandriapawlik
 purpose: create database from TOA5 file, do some data quality control or add calculated fields to dataframe, 
     and write data to the database
 source: code modified from db_tools.py obtained at 

@@ -1,6 +1,5 @@
 """Create tag definitions for database
 
-author: Alex Pawlik - apawlik@umich.edu - github.com/alexandriapawlik
 purpose: define tags and other metadata based on file name
 source: code modified from db_config.py obtained at 
     https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafana/
