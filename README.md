@@ -10,3 +10,4 @@ Code structure:
 
 
 Lines where changes need to occur for a new file type, etc. are led by the string ####admin
+/src/secret.py is not uploaded, recreate your own copy using /src/secret_copy.py
