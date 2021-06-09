@@ -24,7 +24,9 @@ class DataTable:
         self.filename = Filename    
         
     def create_df(self):
-        """Parse file into Pandas dataframe and return it"""
+        """Parse file and return as pandas df (no column names)
+        
+        make sure that input nan values are in one of these formats: "NaN, "Nan", "nan" (or else they'll be left as strings)"""
 
         all_lines = []
         all_times = []
@@ -32,8 +34,11 @@ class DataTable:
         with open(self.filename) as reader:
             # iterate through each line of file
             for line in reader:
+                # clean line and convert to str array
+                line = line.replace('\n','')
+                line = line.replace('\r','')
+                line = line.replace('"','')
                 line = line.split(',')
-                temp = []
 
                 # fix timestamp format 
                 # TODO can we just set it differently from logger?
@@ -42,21 +47,21 @@ class DataTable:
 
                 # extract timestamp
                 all_times.append(ts)
-                line = line[1:]
+                untyped_line = line[1:]
 
-                # TODO this should allow strings also
-                # parse observation value by value: convert values to float or NaN
-                for i,v in enumerate(line):
+                # parse observation value by value: convert values to float/nan or leave as string
+                temp_line = []
+                for i,v in enumerate(untyped_line):
                     try:
-                        dataval = float(v)
+                        dataval = float(v) 
                     except ValueError:
-                        dataval = float('nan')
-                    temp.append(dataval)
+                        dataval = v
+                    temp_line.append(dataval)
                 # add line to list of lines
-                all_lines.append(line)
+                all_lines.append(temp_line)
 
-        # convert list of lines to np array
-        self.line_array = np.array(all_lines)
+        # create df and return it
+        self.line_array = all_lines
         self.time_array = pd.DatetimeIndex(all_times)
         return pd.DataFrame(self.line_array, index = self.time_array)
 
@@ -64,42 +69,41 @@ class DataTable:
 ## define derived classes, one per differing file type/format/variables
 # if base class doesn't match your file format, just create an all-new class with same fn signatures
 
-class TestFile(DataTable):
-    """derived class for test run filetype (.tst)
+class DemoFile(DataTable):
+    """derived class for demo filetype (.tst)
     
     no header in file,
     input columns: (Timestamp, Status, Plot, Flux Value)
     output columns: (Plot, Flux_Value)"""
 
-    # CONSTANT private class vars, specific to this file type
-    _col_names = ["Plot", "Flux_Value"]   # names of cols we want to keep, without timestamp column
-    _delete_cols = [1]  # indices of cols we won't need
-    # TODO: store db configs based on file type, for public use
+    # CONSTANT class vars, specific to this file type
+    col_names = ["Plot", "Flux_Value"]   ### names of cols we want to keep, without timestamp column
+    delete_cols = [0]  ### indices of cols we won't need, skipping indices of timestamp cols
+    # TODO: store db configs based on file type, for use by FileManager
 
     def __init__(self, Filename):
-        """Create a TestFile object, store filename"""
+        """Create a DemoFile object, store filename"""
 
         super().__init__(Filename)
         
     def create_df(self):
         """Parse file into clean Pandas dataframe"""
 
-        # use base class to parse data, but create different Pandas df than the one it returns
-        super().create_df() 
+        # use base class to parse data in df
+        df = super().create_df() 
         
         ### derived class stuff (specific to file type)
 
         # remove extra cols
-        self.line_array = np.delete(self.line_array, self._delete_cols, axis = 1)
-        # fix any data types here if necessary
-        # 
-        # create Pandas df
-        df = pd.DataFrame(self.line_array, index = self.time_array, columns = self._col_names)
+        df.drop(df.columns[self.delete_cols], axis = 1, inplace = True)
+        # add column names
+        df.columns = self.col_names
         # mutate to create any new columns
-        df['Sum'] = df.Plot + df.Flux_Value
+        df['Sum'] = df['Plot'] + df['Flux_Value']
         # qa/qc that needs to be done for this file type
         # 
+        return df
 
 
 ####admin ADD NEW DERIVED CLASS HERE FOR EACH NEW FILE TYPE
-# TODO template for new derived classes
+# TODO leave template for new derived classes
