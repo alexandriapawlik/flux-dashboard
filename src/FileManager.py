@@ -50,27 +50,28 @@ class FileManager:
             rp = BucketRetentionRules(type = "expire", every_seconds = 2592000)  # 2.5 mil seconds - about 1 month
         ####admin create and assign new retention policies here if needed
        
+       # TODO put excepts back in once we know what types to expect
         # create connection
-        try:
-            client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
-        except:
-            logging.error("Could not connect to influxDB client")
-            sys.exit(1)
+        # try:
+        client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
+        # except:
+        #     logging.error("Could not connect to influxDB client")
+        #     sys.exit(1)
         
         # try to add new bucket/database
         buckets_api = client.buckets_api()
-        try:
-            org = client.organizations_api().find_organizations(org = Secret.org)[0]  # get Org ID from API (different than org name)
-            new_bucket = buckets_api.create_bucket(bucket_name = self.dt.dbname, retention_rules=rp, org_id=org.id)
-            logging.info("SUCCESS - created bucket {}".format(new_bucket))
-        except:  
-            # if new bucket cannot be added for some reason
-            logging.error("FAIL - could not create new bucket/database {}".format(self.dt.dbname))
-            logging.info("Here are the buckets that currently exist:")
-            buckets = buckets_api.find_buckets().buckets
-            logging.info("\n".join([f" ---\n ID: {bucket.id}\n Name: {bucket.name}\n Retention: {bucket.retention_rules}"
-                for bucket in buckets]))
-            sys.exit(1)
+        # try:
+        org = client.organizations_api().find_organizations(org = Secret.org)[0]  # get Org ID from API (different than org name)
+        new_bucket = buckets_api.create_bucket(bucket_name = self.dt.dbname, retention_rules=rp, org_id=org.id)
+        logging.info("SUCCESS - created bucket {}".format(new_bucket))
+        # except:  
+        #     # if new bucket cannot be added for some reason
+        #     logging.error("FAIL - could not create new bucket/database {}".format(self.dt.dbname))
+        #     logging.info("Here are the buckets that currently exist:")
+        #     buckets = buckets_api.find_buckets().buckets
+        #     logging.info("\n".join([f" ---\n ID: {bucket.id}\n Name: {bucket.name}\n Retention: {bucket.retention_rules}"
+        #         for bucket in buckets]))
+        #     sys.exit(1)
     
         # close the client connected to the db
         client.close()
@@ -82,6 +83,7 @@ class FileManager:
         # get clean dataframe
         df = self.dt.create_df()
 
+        # TODO put excepts back in once we know what types to expect
         # create connection
         # try:
         client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
