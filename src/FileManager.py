@@ -71,7 +71,7 @@ class FileManager:
         except:  
             # if new bucket cannot be added for some reason
             logging.error("FAIL - could not create new bucket/database {}".format(self.dt.dbname))
-            logging.info("Here are the buckets that currently exist:")
+            logging.info("Free version allowed 2 buckets. Buckets that currently exist:")
             buckets = buckets_api.find_buckets().buckets
             logging.info("\n".join([f" ---\n ID: {bucket.id}\n Name: {bucket.name}\n Retention: {bucket.retention_rules}"
                 for bucket in buckets]))
@@ -97,14 +97,14 @@ class FileManager:
         # try to write panda dataframe to the database
         try:
             write_client = client.write_api(write_options = SYNCHRONOUS)
-            write_client.write(self.dt.dbname, Secret.org, record = df, data_frame_measurement_name = self.dt.msrmnt)
+            write_client.write(self.dt.dbname, Secret.org, record = df, 
+                data_frame_measurement_name = self.dt.msrmnt, data_frame_tag_columns = self.dt.tag_cols)
             logging.info("SUCCESS - data from file {} was added to bucket {}".format(self.dt.filename, self.dt.dbname))
+            write_client.close()
         except:
             # if upload fails for some reason
             logging.error("FAIL - data from file {} could not be added to bucket {}".format(self.dt.filename, self.dt.dbname))
             sys.exit(1)
-
-        # TODO use tags?
 
         # close the database
         client.close()

@@ -78,8 +78,9 @@ class DemoFile(DataTable):
 
 
     # CONSTANT class vars, specific to this file type
-    col_names = ["Plot", "Flux_Value"]   ### names of cols we want to keep, without timestamp column
-    delete_cols = [0]  ### indices of cols we won't need, skipping indices of timestamp cols
+    col_names = ["Plot", "Flux_Value"]   # names of cols we want to keep, without timestamp column
+    tag_cols = ["Plot"]  # names of columns to use as tag columns - data fields that stay wide and not narrow format
+    delete_cols = [0]  # indices of cols we won't need, skipping indices of timestamp cols
     # db config options
     dbname = 'demo'  # represents a bucket
     msrmnt = 'Ameriflux_fastdata'  # tag for type of measurement
