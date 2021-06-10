@@ -58,7 +58,7 @@ class FileManager:
        
         # create connection
         try:
-            client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
+            client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org, gzip=True)
         except:
             (err_type, err_value, err_traceback) = sys.exc_info()
             logging.error("{}:{}Could not connect to influxDB client".format(err_type, err_value))
@@ -90,12 +90,11 @@ class FileManager:
         """Update appropriate existing database with data from file"""
 
         # get clean dataframe
-        df = self.dt.create_df()
-        print(df)
+        df = self.dt.build_df()
 
         # create connection
         try:
-            client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
+            client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org, gzip=True)
         except:
             (err_type, err_value, err_traceback) = sys.exc_info()
             logging.error("{}:{}Could not connect to influxDB client".format(err_type, err_value))
@@ -104,7 +103,7 @@ class FileManager:
         # try to write panda dataframe to the database
         try:
             write_client = client.write_api(write_options = SYNCHRONOUS)
-            write_client.write(self.dt.dbname, Secret.org, record = df, time_precision = 's',
+            write_client.write(self.dt.dbname, Secret.org, record = df, time_precision = self.dt.time_precision, 
                 data_frame_measurement_name = self.dt.msrmnt, data_frame_tag_columns = self.dt.tag_cols)
             logging.info("SUCCESS data was added to bucket {}".format(self.dt.filename, self.dt.dbname))
             write_client.close()

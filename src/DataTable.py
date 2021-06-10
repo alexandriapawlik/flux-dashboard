@@ -25,7 +25,7 @@ class DataTable:
         # set instance var
         self.filename = Filename    
         
-    def create_df(self):
+    def build_df(self):
         """Parse file and return as pandas df (no column names)
         
         make sure that input nan values are in one of these formats: "NaN, "Nan", "nan" (or else they'll be left as strings)"""
@@ -63,7 +63,7 @@ class DataTable:
 
         # create df and return it
         self.line_array = all_lines
-        self.time_array = pd.DatetimeIndex(all_times, tz = pytz.timezone('US/Eastern'))  # set timezone
+        self.time_array = pd.DatetimeIndex(all_times)  
         return pd.DataFrame(self.line_array, index = self.time_array)
 
 
@@ -78,12 +78,14 @@ class DemoFile(DataTable):
 
 
     # CONSTANT class vars, specific to this file type
-    col_names = ["Plot", "Flux_Value"]   # names of cols we want to keep, without timestamp column
-    tag_cols = ["Plot"]  # names of columns to use as tag columns - data fields that stay wide and not long format, must be string values
-    delete_cols = [0]  # indices of cols we won't need, skipping indices of timestamp cols
+    col_names = ['Plot', 'Temp', 'Flux_Value', 'Code']   # names of cols we want to keep, without timestamp column
+    tag_cols = ['Plot', 'Code']  # names of columns to use as tag columns - data fields that stay wide and not long format, must be string values
+    delete_cols = [0,1]  # indices of cols we won't need, skipping indices of timestamp cols
     # db config options
     dbname = 'demo'  # represents a bucket
     msrmnt = 'Ameriflux_fastdata'  # tag for type of measurement
+    time_precision = 's'  # see docs for other options
+    timezone = 'US/Eastern'  # see docs for other options
 
 
     def __init__(self, Filename):
@@ -91,11 +93,11 @@ class DemoFile(DataTable):
 
         super().__init__(Filename)
         
-    def create_df(self):
+    def build_df(self):
         """Parse file into clean Pandas dataframe"""
 
-        # use base class to parse data in df
-        df = super().create_df() 
+        # use base class to parse data in df, set timezone
+        df = super().build_df().tz_localize(self.timezone)
         
         ### derived class stuff (specific to file type)
 
@@ -103,8 +105,10 @@ class DemoFile(DataTable):
         df.drop(df.columns[self.delete_cols], axis = 1, inplace = True)
         # add column names
         df.columns = self.col_names
+        # fix column types (ie. int that should be tag/string will be parsed as a number)
+        # 
         # mutate to create any new columns
-        df['Sum'] = df['Plot'] + df['Flux_Value']
+        df['Sum'] = df['Temp'] + df['Flux_Value']
         # qa/qc that needs to be done for this file type
         # 
         return df
