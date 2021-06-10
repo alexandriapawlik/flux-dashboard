@@ -59,7 +59,8 @@ class FileManager:
         try:
             client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
         except:
-            logging.error("Could not connect to influxDB client")
+            (err_type, err_value, err_traceback) = sys.exc_info()
+            logging.error("{}:{}: Could not connect to influxDB client".format(err_type, err_value))
             sys.exit(1)
         
         # try to add new bucket/database
@@ -70,8 +71,9 @@ class FileManager:
             logging.info("SUCCESS - created bucket {}".format(new_bucket))
         except:  
             # if new bucket cannot be added for some reason
-            logging.error("FAIL - could not create new bucket/database {}".format(self.dt.dbname))
-            logging.info("Free version allowed 2 buckets. Buckets that currently exist:")
+            (err_type, err_value, err_traceback) = sys.exc_info()
+            logging.error("{}:{}: FAIL could not create new bucket/database {}".format(err_type, err_value, self.dt.dbname))
+            logging.info("Free version allowed 2 new buckets. Buckets that currently exist:")
             buckets = buckets_api.find_buckets().buckets
             logging.info("\n".join([f" ---\n ID: {bucket.id}\n Name: {bucket.name}\n Retention: {bucket.retention_rules}"
                 for bucket in buckets]))
@@ -86,24 +88,27 @@ class FileManager:
 
         # get clean dataframe
         df = self.dt.create_df()
+        print(df)
 
         # create connection
         try:
             client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
         except:
-            logging.error("Could not connect to influxDB client")
+            (err_type, err_value, err_traceback) = sys.exc_info()
+            logging.error("{}:{}: Could not connect to influxDB client".format(err_type, err_value))
             sys.exit(1)
 
         # try to write panda dataframe to the database
         try:
             write_client = client.write_api(write_options = SYNCHRONOUS)
-            write_client.write(self.dt.dbname, Secret.org, record = df, 
+            write_client.write(self.dt.dbname, Secret.org, record = df, write_precision = 's',
                 data_frame_measurement_name = self.dt.msrmnt, data_frame_tag_columns = self.dt.tag_cols)
             logging.info("SUCCESS - data from file {} was added to bucket {}".format(self.dt.filename, self.dt.dbname))
             write_client.close()
         except:
             # if upload fails for some reason
-            logging.error("FAIL - data from file {} could not be added to bucket {}".format(self.dt.filename, self.dt.dbname))
+            (err_type, err_value, err_traceback) = sys.exc_info()
+            logging.error("{}:{}: FAIL could not add data to bucket {}".format(err_type, err_value, self.dt.dbname))
             sys.exit(1)
 
         # close the database

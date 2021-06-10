@@ -5,6 +5,7 @@ project: github.com/alexandriapawlik/flux-dashboard"""
 
 
 from datetime import datetime
+import pytz
 import pandas as pd
 import ciso8601  # TODO use for parsing dates
 
@@ -41,10 +42,9 @@ class DataTable:
                 line = line.replace('"','')
                 line = line.split(',')
 
-                # fix timestamp format 
+                # parse timestamp
                 # TODO can we just set it differently from logger?
                 ts = datetime.strptime(line[0], '%Y-%m-%d %H:%M:%S')
-                # ts = datetime.strptime(line[0], '%Y-%m-%d')
 
                 # extract timestamp
                 all_times.append(ts)
@@ -63,7 +63,7 @@ class DataTable:
 
         # create df and return it
         self.line_array = all_lines
-        self.time_array = pd.DatetimeIndex(all_times)
+        self.time_array = pd.DatetimeIndex(all_times, tz = pytz.timezone('US/Eastern'))  # set timezone
         return pd.DataFrame(self.line_array, index = self.time_array)
 
 
@@ -79,7 +79,7 @@ class DemoFile(DataTable):
 
     # CONSTANT class vars, specific to this file type
     col_names = ["Plot", "Flux_Value"]   # names of cols we want to keep, without timestamp column
-    tag_cols = ["Plot"]  # names of columns to use as tag columns - data fields that stay wide and not narrow format
+    tag_cols = ["Plot"]  # names of columns to use as tag columns - data fields that stay wide and not long format, must be string values
     delete_cols = [0]  # indices of cols we won't need, skipping indices of timestamp cols
     # db config options
     dbname = 'demo'  # represents a bucket
