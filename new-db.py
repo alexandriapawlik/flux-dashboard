@@ -12,7 +12,7 @@ import datetime
 if len(sys.argv) != 2:
     print("Requires file name to be passed as command line argument")
     print("Use: python3 new-db.py <filename>")
-    sys.exit()
+    sys.exit(2)
 
 filename = sys.argv[1]
 
@@ -25,4 +25,4 @@ mgr = FileManager(filename)
 mgr.new_db()
 
 # log completion
-logging.info("{}: task completion")
+logging.info("{}: task completion".format(datetime.datetime.now()))

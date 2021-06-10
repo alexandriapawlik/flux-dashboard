@@ -12,18 +12,20 @@ import numpy as np
 from influxdb_client import InfluxDBClient, BucketRetentionRules
 from influxdb_client.client.write_api import SYNCHRONOUS
 from . import DataTable
-from .secret import Secret  # REQUIRED make your own copy of this using secret_copy.py
+from .secret import Secret  
 
 
 class FileManager:
-    """File manager: wraps DataTable-derived object and handles its access to influxDB"""
+    """File manager: wraps DataTable-derived object and handles its access to influxDB
+    
+    handles all errors and logging for DataTable-derived classes"""
 
     def __init__(self, filename):
         """Create FileManager obj: identify file type and create appropriate DataTable-derived class"""
         # check that file exists, log stack trace and exit if it doesn't
         if not os.path.isfile(filename):
             logging.error("File path {} does not exist.".format(filename))
-            sys.exit()
+            sys.exit(1)
 
         # determine file type
         filetype = os.path.splitext(filename)
@@ -35,7 +37,7 @@ class FileManager:
         ####admin ADD IF CLAUSE FOR EACH NEW FILE TYPE HERE
         else:  # quit if we don't recognize the file type
             logging.error("File type {} from file {} not yet templated.".format(filetype, filename))
-            sys.exit()
+            sys.exit(1)
 
 
     def new_db(self):
@@ -49,7 +51,11 @@ class FileManager:
         ####admin create and assign new retention policies here if needed
        
         # create connection
-        client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
+        try:
+            client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
+        except:
+            logging.error("Could not connect to influxDB client")
+            sys.exit(1)
         
         # try to add new bucket/database
         buckets_api = client.buckets_api()
@@ -64,6 +70,7 @@ class FileManager:
             buckets = buckets_api.find_buckets().buckets
             logging.info("\n".join([f" ---\n ID: {bucket.id}\n Name: {bucket.name}\n Retention: {bucket.retention_rules}"
                 for bucket in buckets]))
+            sys.exit(1)
     
         # close the client connected to the db
         client.close()
@@ -76,16 +83,21 @@ class FileManager:
         df = self.dt.create_df()
 
         # create connection
+        # try:
         client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
+        # except:
+        #     logging.error("Could not connect to influxDB client")
+        #     sys.exit(1)
 
         # try to write panda dataframe to the database
-        try:
-            write_client = client.write_api(write_options = SYNCHRONOUS)
-            write_client.write(self.dt.dbname, Secret.org, record = df, data_frame_measurement_name = self.dt.msrmt)
-            logging.info("SUCCESS - data from file {} was added to bucket {}".format(self.dt.filename, self.dt.dbname))
-        except:
-            # if upload fails for some reason
-            logging.error("FAIL - data from file {} could not be added to bucket {}".format(self.dt.filename, self.dt.dbname))
+        # try:
+        write_client = client.write_api(write_options = SYNCHRONOUS)
+        write_client.write(self.dt.dbname, Secret.org, record = df, data_frame_measurement_name = self.dt.msrmnt)
+        logging.info("SUCCESS - data from file {} was added to bucket {}".format(self.dt.filename, self.dt.dbname))
+        # except:
+        #     # if upload fails for some reason
+        #     logging.error("FAIL - data from file {} could not be added to bucket {}".format(self.dt.filename, self.dt.dbname))
+        #     sys.exit(1)
 
         # TODO use tags?
 
