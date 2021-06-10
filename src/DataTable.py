@@ -77,13 +77,17 @@ class DemoFile(DataTable):
     output columns: (Plot, Flux_Value)"""
 
 
-    # CONSTANT class vars, specific to this file type
-    col_names = ['Plot', 'Temp', 'Flux_Value', 'Code']   # names of cols we want to keep, without timestamp column
-    tag_cols = ['Plot', 'Code']  # names of columns to use as tag columns - data fields that stay wide and not long format, must be string values
-    delete_cols = [0,1]  # indices of cols we won't need, skipping indices of timestamp cols
-    # db config options
-    dbname = 'demo'  # represents a bucket
-    msrmnt = 'Ameriflux_fastdata'  # tag for type of measurement
+    ####### CONSTANT class vars, specific to this file type
+
+    # indices of cols we won't need, skipping indices of timestamp cols
+    delete_cols = [0,1] 
+    # names of cols we will to keep, without timestamp column
+    col_names = ['Plot', 'Temp', 'Flux_Value', 'Code']   
+    # names of fields/cols to use as tags - data fields that have string values that you want to group by (wont be stored in _field anymore)
+    tag_cols = ['Plot', 'Code']  
+    # influxdb config options
+    dbname = 'demo3'  # db is an alias for bucket
+    msrmnt = 'Ameriflux_fastdata'  # type of measurement
     time_precision = 's'  # see docs for other options
     timezone = 'US/Eastern'  # see docs for other options
 

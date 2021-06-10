@@ -19,7 +19,6 @@ class FileManager:
     """File manager: wraps DataTable-derived object and handles its access to influxDB
     
     handles all errors and logging for DataTable-derived classes"""
-    # TODO add loops to try/except for when we don't connect the first time? or does it already do that itself
 
     def __init__(self, filename):
         """Create FileManager obj: identify file type and create appropriate DataTable-derived class"""
@@ -41,10 +40,33 @@ class FileManager:
             sys.exit(1)
 
 
-    def get_bucketname(self):
-        """Return the name of the bucket/db that this file type has been matched to"""
-        return self.dt.dbname
+    # fn not needed
+    # def get_bucketname(self):
+    #     """Return the name of the bucket/db that this file type has been matched to"""
+    #     return self.dt.dbname
 
+
+    def _connect(self):
+        """Attempt to establish connection with influxdb cloud, return InfluxDBClient object
+        
+        private function only to be utilized within this class"""
+        i = 0
+        tries = 3
+        while i < tries:
+            try:
+                client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org, gzip=True)
+                return client
+            except:
+                (err_type, err_value, err_traceback) = sys.exc_info()
+                logging.info("Could not connect to influxDB client, retrying... ")
+                i += 1
+                if i == tries:
+                    logging.error("Could not connect to influxDB client \n{}\n{}".format(err_type, err_value))
+
+        # if it deosn't return in 3 tries, quit this runtime
+        
+        sys.exit(1)
+        
 
     def new_db(self):
         """"Create new database matching DataTable (derived class) format
@@ -57,23 +79,18 @@ class FileManager:
         ####admin create and assign new retention policies here if needed
        
         # create connection
-        try:
-            client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org, gzip=True)
-        except:
-            (err_type, err_value, err_traceback) = sys.exc_info()
-            logging.error("{}:{}Could not connect to influxDB client".format(err_type, err_value))
-            sys.exit(1)
+        client = self._connect()
         
         # try to add new bucket/database
         buckets_api = client.buckets_api()
         try:
             org = client.organizations_api().find_organizations(org = Secret.org)[0]  # get Org ID from API (different than org name)
             new_bucket = buckets_api.create_bucket(bucket_name = self.dt.dbname, retention_rules=rp, org_id=org.id)
-            logging.info("SUCCESS created bucket {}".format(new_bucket))
+            logging.info("SUCCESS created bucket {}\n{}".format(self.dt.dbname, new_bucket))
         except:  
             # if new bucket cannot be added for some reason
             (err_type, err_value, err_traceback) = sys.exc_info()
-            logging.error("{}:{}FAIL could not create new bucket/database {}".format(err_type, err_value, self.dt.dbname))
+            logging.error("Could not create new bucket {}\n{}\n{}".format(self.dt.dbname, err_type, err_value))
             
             # extra logging info for buckets
             # logging.info("Free version allowed 2 new buckets. Buckets that currently exist:")
@@ -93,24 +110,19 @@ class FileManager:
         df = self.dt.build_df()
 
         # create connection
-        try:
-            client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org, gzip=True)
-        except:
-            (err_type, err_value, err_traceback) = sys.exc_info()
-            logging.error("{}:{}Could not connect to influxDB client".format(err_type, err_value))
-            sys.exit(1)
+        client = self._connect()
 
         # try to write panda dataframe to the database
         try:
             write_client = client.write_api(write_options = SYNCHRONOUS)
             write_client.write(self.dt.dbname, Secret.org, record = df, time_precision = self.dt.time_precision, 
                 data_frame_measurement_name = self.dt.msrmnt, data_frame_tag_columns = self.dt.tag_cols)
-            logging.info("SUCCESS data was added to bucket {}".format(self.dt.filename, self.dt.dbname))
+            logging.info("SUCCESS data was added to bucket {}".format(self.dt.dbname))
             write_client.close()
         except:
             # if upload fails for some reason
             (err_type, err_value, err_traceback) = sys.exc_info()
-            logging.error("{}:{}FAIL could not add data to bucket {}".format(err_type, err_value, self.dt.dbname))
+            logging.error("Could not add data to bucket {}\n{}\n{}".format(self.dt.dbname, err_type, err_value))
             sys.exit(1)
 
         # close the database

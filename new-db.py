@@ -19,7 +19,7 @@ filename = sys.argv[1]
 # set name of log output file (logs will be appended) - required to allow other classes to log
 logging.basicConfig(filename = Config.logfile, level = logging.INFO) 
 # log info on this instance
-logging.info("START {}: creating new db using file {}".format(datetime.datetime.now(), filename))
+logging.info("START {}: creating db using file {}".format(datetime.datetime.now(), filename))
 
 mgr = FileManager(filename)
 mgr.new_db()
