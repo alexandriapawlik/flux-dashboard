@@ -19,10 +19,10 @@ filename = sys.argv[1]
 # set name of log output file (logs will be appended)
 logging.basicConfig(filename = Config.logfile, level = logging.INFO)
 # log info on this instance
-logging.info("{}: updating db using file {}".format(datetime.datetime.now(), filename))
+logging.info("START {}: updating db using file {}".format(datetime.datetime.now(), filename))
 
 mgr = FileManager(filename)
 mgr.update_db()
 
 # log completion
-logging.info("{}: task completion".format(datetime.datetime.now()))
+logging.info("END {}: update complete".format(datetime.datetime.now()))

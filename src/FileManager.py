@@ -19,6 +19,7 @@ class FileManager:
     """File manager: wraps DataTable-derived object and handles its access to influxDB
     
     handles all errors and logging for DataTable-derived classes"""
+    # TODO add loops to try/except for when we don't connect the first time? or does it already do that itself
 
     def __init__(self, filename):
         """Create FileManager obj: identify file type and create appropriate DataTable-derived class"""
@@ -60,7 +61,7 @@ class FileManager:
             client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
         except:
             (err_type, err_value, err_traceback) = sys.exc_info()
-            logging.error("{}:{}: Could not connect to influxDB client".format(err_type, err_value))
+            logging.error("{}:{}Could not connect to influxDB client".format(err_type, err_value))
             sys.exit(1)
         
         # try to add new bucket/database
@@ -68,15 +69,17 @@ class FileManager:
         try:
             org = client.organizations_api().find_organizations(org = Secret.org)[0]  # get Org ID from API (different than org name)
             new_bucket = buckets_api.create_bucket(bucket_name = self.dt.dbname, retention_rules=rp, org_id=org.id)
-            logging.info("SUCCESS - created bucket {}".format(new_bucket))
+            logging.info("SUCCESS created bucket {}".format(new_bucket))
         except:  
             # if new bucket cannot be added for some reason
             (err_type, err_value, err_traceback) = sys.exc_info()
-            logging.error("{}:{}: FAIL could not create new bucket/database {}".format(err_type, err_value, self.dt.dbname))
-            logging.info("Free version allowed 2 new buckets. Buckets that currently exist:")
-            buckets = buckets_api.find_buckets().buckets
-            logging.info("\n".join([f" ---\n ID: {bucket.id}\n Name: {bucket.name}\n Retention: {bucket.retention_rules}"
-                for bucket in buckets]))
+            logging.error("{}:{}FAIL could not create new bucket/database {}".format(err_type, err_value, self.dt.dbname))
+            
+            # extra logging info for buckets
+            # logging.info("Free version allowed 2 new buckets. Buckets that currently exist:")
+            # buckets = buckets_api.find_buckets().buckets
+            # logging.info("\n".join([f" ---\n ID: {bucket.id}\n Name: {bucket.name}\n Retention: {bucket.retention_rules}"
+            #     for bucket in buckets]))
             sys.exit(1)
     
         # close the client connected to the db
@@ -95,20 +98,20 @@ class FileManager:
             client = InfluxDBClient(url = Secret.url, token = Secret.token, org = Secret.org)
         except:
             (err_type, err_value, err_traceback) = sys.exc_info()
-            logging.error("{}:{}: Could not connect to influxDB client".format(err_type, err_value))
+            logging.error("{}:{}Could not connect to influxDB client".format(err_type, err_value))
             sys.exit(1)
 
         # try to write panda dataframe to the database
         try:
             write_client = client.write_api(write_options = SYNCHRONOUS)
-            write_client.write(self.dt.dbname, Secret.org, record = df, write_precision = 's',
+            write_client.write(self.dt.dbname, Secret.org, record = df, time_precision = 's',
                 data_frame_measurement_name = self.dt.msrmnt, data_frame_tag_columns = self.dt.tag_cols)
-            logging.info("SUCCESS - data from file {} was added to bucket {}".format(self.dt.filename, self.dt.dbname))
+            logging.info("SUCCESS data was added to bucket {}".format(self.dt.filename, self.dt.dbname))
             write_client.close()
         except:
             # if upload fails for some reason
             (err_type, err_value, err_traceback) = sys.exc_info()
-            logging.error("{}:{}: FAIL could not add data to bucket {}".format(err_type, err_value, self.dt.dbname))
+            logging.error("{}:{}FAIL could not add data to bucket {}".format(err_type, err_value, self.dt.dbname))
             sys.exit(1)
 
         # close the database
