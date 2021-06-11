@@ -1,7 +1,7 @@
 # UMBS AmeriFlux Core Site Data Dashboard
 
-Example: https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafana/
-<!---eventually paste outline from GDrive here--->
+[Inspiration](https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafana/)   
+[Dashboard access](https://umbsflux.grafana.net/d/VyqSwgR7k/umbs-ameriflux-core-site?from=1623161110000&to=1623161190000&orgId=1) (only works for existing Grafana org members)
 
 
 ## Code Structure:  
@@ -36,3 +36,5 @@ Example: https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafan
 - Grafana reads data from influxDB via http
     - Display things that help with QA/QC
 - Users access dashboard with permissioned Grafana endpoint
+
+
