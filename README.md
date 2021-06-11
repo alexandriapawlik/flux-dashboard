@@ -4,7 +4,7 @@
 [Dashboard access](https://umbsflux.grafana.net/d/VyqSwgR7k/umbs-ameriflux-core-site?from=1623161110000&to=1623161190000&orgId=1) (only works for existing Grafana org members)
 
 
-## Code Structure:  
+## Outline:  
 - src
     - [DataTable.py](src/DataTable.py) - contains DataTable superclass and one derived class per file type (data table format)
     - [FileManager.py](src/DataTable.py) - contains FileManager class which wraps a (derived) DataTable object to interact with influxDB
