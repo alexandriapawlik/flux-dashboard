@@ -1,6 +1,7 @@
 .vscode
 secret.py
 .DS_Store
+cheas_code/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
