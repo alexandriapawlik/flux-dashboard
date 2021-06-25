@@ -111,6 +111,7 @@ class FileManager:
 
         # get clean dataframe
         df = self.dt.build_df()
+        print(df)
 
         # create connection
         client = self._connect()

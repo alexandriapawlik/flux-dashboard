@@ -40,7 +40,7 @@ class DataTable:
         with open(self.filename) as reader:
 
             # skip header lines
-            for i in headerlines:
+            for i in range(headerlines):
                 next(reader)
 
             # read file line by line
