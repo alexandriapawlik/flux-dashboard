@@ -7,7 +7,8 @@ import sys
 import datetime
 
 
-####admin new file types need to be added to source code before they can be used as an argument
+#### new file/table types need to be added to source code before they can be used as an argument
+#### new databases need to be created with new-db.py before they can be updated
 
 if len(sys.argv) != 2:
     print("Requires file name to be passed as command line argument")

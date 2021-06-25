@@ -22,7 +22,11 @@
 - Lines where changes need to occur for a new file type, etc. are led by the string ####admin
 - Write a bash script to upload a series of files to influxDB (after creating each new database, then continually upload the new files to it)
 - Database is used here as synonymous to influxDB's "bucket"
-- TODO
+- What changes need to be made for a new table  
+    - (admin1) DataTable.py - new derived class for table type, use commented template
+    - (admin2) FileManager.py - set rules of identifying this table type from a file name
+    - (admin3) define new retention policy if needed
+    - (admin4) config.py - define new configuration values if needed
 
 
 ## Data Flow:

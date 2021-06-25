@@ -27,14 +27,17 @@ class FileManager:
             logging.error("File path {} does not exist.".format(filename))
             sys.exit(1)
 
-        # determine file type
-        filetype = os.path.splitext(filename)
-        filetype = filetype[1]
+        # split file name into file type and other bits separated by _
+        filestr = os.path.splitext(filename)
+        filetype = filestr[1]
+        filepieces = filestr[0].split("_")  # array of pieces of file name
 
         # init the appropriate version of DataTable object and store it
         if filetype == '.tst':
             self.dt = DataTable.DemoFile(filename)
-        ####admin ADD IF CLAUSE FOR EACH NEW FILE TYPE HERE
+        elif filepieces[0] == '46m':
+            self.dt = DataTable.Test46m(filename)
+        ####admin2 ADD IF CLAUSE FOR EACH NEW FILE TYPE HERE
         else:  # quit if we don't recognize the file type
             logging.error("File type {} from file {} not yet templated.".format(filetype, filename))
             sys.exit(1)
@@ -76,7 +79,7 @@ class FileManager:
         # chose retention policy by measurement type
         if self.dt.msrmnt == 'Ameriflux_fastdata':
             rp = BucketRetentionRules(type = "expire", every_seconds = 2592000)  # 2.5 mil seconds - about 1 month
-        ####admin create and assign new retention policies here if needed
+        ####admin3 create and assign new retention policies here if needed
        
         # create connection
         client = self._connect()
@@ -93,7 +96,7 @@ class FileManager:
             logging.error("Could not create new bucket {}\n{}\n{}".format(self.dt.dbname, err_type, err_value))
             
             # extra logging info for buckets
-            # logging.info("Free version allowed 2 new buckets. Buckets that currently exist:")
+            # logging.info("Free version allows 2 new buckets. Buckets that currently exist:")
             # buckets = buckets_api.find_buckets().buckets
             # logging.info("\n".join([f" ---\n ID: {bucket.id}\n Name: {bucket.name}\n Retention: {bucket.retention_rules}"
             #     for bucket in buckets]))

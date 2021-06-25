@@ -7,7 +7,7 @@ project: github.com/alexandriapawlik/flux-dashboard"""
 from datetime import datetime
 import pytz
 import pandas as pd
-import ciso8601  # TODO use for parsing dates
+import ciso8601  # TODO use for parsing dates (recommended by influxDB docs?)
 
 ############ base class
 
@@ -25,16 +25,25 @@ class DataTable:
         # set instance var
         self.filename = Filename    
         
-    def build_df(self):
-        """Parse file and return as pandas df (no column names)
-        
-        make sure that input nan values are in one of these formats: "NaN, "Nan", "nan" (or else they'll be left as strings)"""
+    def build_df(self, headerlines, timeformat):
+        """Parse file and return as pandas df
+
+        ASSUME timestamp is first column
+        headlerlines - int, number of lines to ignore at beginning of file (including line with column names)
+        timeformat - string, date format that looks like '%Y-%m-%d %H:%M:%S'
+        note: make sure that input nan values are in one of these formats: 
+            "NaN, "Nan", "nan" (or else they'll be left as strings)"""
 
         all_lines = []
         all_times = []
         # doc reader - automatically closes file when done
         with open(self.filename) as reader:
-            # iterate through each line of file
+
+            # skip header lines
+            for i in headerlines:
+                next(reader)
+
+            # read file line by line
             for line in reader:
                 # clean line and convert to str array
                 line = line.replace('\n','')
@@ -43,8 +52,7 @@ class DataTable:
                 line = line.split(',')
 
                 # parse timestamp
-                # TODO can we just set it differently from logger?
-                ts = datetime.strptime(line[0], '%Y-%m-%d %H:%M:%S')
+                ts = datetime.strptime(line[0], timeformat)
 
                 # extract timestamp
                 all_times.append(ts)
@@ -69,6 +77,7 @@ class DataTable:
 
 ############# define derived classes, one per differing file type/format/variables
 
+
 class DemoFile(DataTable):
     """derived class for demo filetype (.tst)
     
@@ -79,14 +88,18 @@ class DemoFile(DataTable):
 
     ####### CONSTANT class vars, specific to this file type
 
+    # number of lines to ignore at the beginning of file
+    headerlines = 0
     # indices of cols we won't need, skipping indices of timestamp cols
     delete_cols = [0,1] 
     # names of cols we will to keep, without timestamp column
     col_names = ['Plot', 'Temp', 'Flux_Value', 'Code']   
     # names of fields/cols to use as tags - data fields that have string values that you want to group by (wont be stored in _field anymore)
     tag_cols = ['Plot', 'Code']  
-    # influxdb config options
-    dbname = 'demo3'  # db is an alias for bucket
+    # format of timestamps in input file
+    timeformat = '%Y-%m-%d %H:%M:%S'
+    # influxdb config options 
+    dbname = 'demo3'  # name of bucket/database this table belongs in
     msrmnt = 'Ameriflux_fastdata'  # type of measurement
     time_precision = 's'  # see docs for other options
     timezone = 'US/Eastern'  # see docs for other options
@@ -101,7 +114,7 @@ class DemoFile(DataTable):
         """Parse file into clean Pandas dataframe"""
 
         # use base class to parse data in df, set timezone
-        df = super().build_df().tz_localize(self.timezone)
+        df = super().build_df(headerlines = self.headerlines, timeformat = self.timeformat).tz_localize(self.timezone)
         
         ### derived class stuff (specific to file type)
 
@@ -109,16 +122,111 @@ class DemoFile(DataTable):
         df.drop(df.columns[self.delete_cols], axis = 1, inplace = True)
         # add column names
         df.columns = self.col_names
-        # fix column types (ie. int that should be tag/string will be parsed as a number)
-        # 
         # mutate to create any new columns
         df['Sum'] = df['Temp'] + df['Flux_Value']
-        # qa/qc that needs to be done for this file type
-        # 
+
         return df
 
 
-####admin ADD NEW DERIVED CLASS HERE FOR EACH NEW FILE TYPE
-# if base class doesn't match your file format, just override fns in derived class
 
-# TODO leave template for new derived classes
+class Test46m(DataTable):
+    """Test loggernet output"""
+
+    ####### CONSTANT class vars, specific to this file type
+
+    # number of lines to ignore at the beginning of file
+    headerlines = 4
+    # indices of cols we won't need, skipping indices of timestamp cols
+    delete_cols = [0]
+    # names of cols we will to keep, without timestamp column
+    col_names =  ["PPFD", "Total_PPFD", "Diffuse_PPFD", "Calibration_PPFD", "Solar_Incidence"]
+    # names of fields/cols to use as tags - data fields that have string values that you want to group by (wont be stored in _field anymore)
+    tag_cols = ["Calibration_PPFD"] 
+    # format of timestamps in input file
+    timeformat = '%Y-%m-%d %H:%M:%S'
+    # influxdb config options 
+    dbname = 'testoutput'  # name of bucket/database this table belongs in
+    msrmnt = 'Ameriflux_fastdata'  # type of measurement
+    time_precision = 's'  # see docs for other options
+    timezone = 'US/Eastern'  # see docs for other options
+
+
+    def __init__(self, Filename):
+        """Create object, store filename"""
+
+        super().__init__(Filename)
+        
+    def build_df(self):
+        """Parse file into clean Pandas dataframe"""
+
+        # use base class to parse data in df, set timezone
+        df = super().build_df(headerlines = self.headerlines, timeformat = self.timeformat).tz_localize(self.timezone)
+        
+        # remove extra cols
+        df.drop(df.columns[self.delete_cols], axis = 1, inplace = True)
+
+        # add column names
+        df.columns = self.col_names
+
+        # fix column types
+        df["Calibration_PPFD"] = df["Calibration_PPFD"].astype(str)
+
+        # qa/qc that needs to be done for this file type
+        # 
+
+        return df
+
+
+####admin1 ADD NEW DERIVED CLASS HERE FOR EACH NEW FILE TYPE
+# if base class doesn't match your file format for some reason, just override fns in derived class
+###################################### template for new derived classes
+
+# class NewClass(DataTable):
+#     """describe file type"""
+
+#     ####### CONSTANT class vars, specific to this file type
+
+#     # number of lines to ignore at the beginning of file
+#     headerlines = 0
+#     # indices of cols we won't need, first non-timestamp column should be index 0
+#     delete_cols = []
+#     # names of cols we will to keep, without timestamp column
+#     col_names =  []
+#     # names of fields/cols to use as tags - data fields that have string values that you want to group by (wont be stored in _field anymore)
+#     tag_cols = [] 
+#     # format of timestamps in input file https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes
+#     timeformat = '%Y-%m-%d %H:%M:%S'
+#     # influxdb config options 
+#     dbname = ''  # name of bucket/database this table belongs in
+#     msrmnt = 'Ameriflux_fastdata'  # type of measurement
+#     time_precision = 's'  # see docs for other options
+#     timezone = 'US/Eastern'  # see docs for other options
+
+
+#     def __init__(self, Filename):
+#         """Create object, store filename"""
+
+#         super().__init__(Filename)
+        
+#     def build_df(self):
+#         """Parse file into clean Pandas dataframe"""
+
+#         # use base class to parse data in df, set timezone
+#         df = super().build_df(headerlines = self.headerlines, timeformat = self.timeformat).tz_localize(self.timezone)
+        
+#         # remove extra cols
+#         df.drop(df.columns[self.delete_cols], axis = 1, inplace = True)
+
+#         # add column names
+#         df.columns = self.col_names
+
+#         # fix column types (ie. int that should be tag/string will be parsed as a number)
+#         # 
+
+#         # mutate to create any new columns
+#         example: df['Sum'] = df['Temp'] + df['Flux_Value']
+
+#         # qa/qc that needs to be done for this file type
+#         # 
+
+#         return df
