@@ -7,7 +7,7 @@
 ## Outline:  
 - src
     - [DataTable.py](src/DataTable.py) - contains DataTable superclass and one derived class per file type (data table format)
-    - [FileManager.py](src/DataTable.py) - contains FileManager class which wraps a (derived) DataTable object to interact with influxDB
+    - [FileManager.py](src/FileManager.py) - contains FileManager class which wraps a (derived) DataTable object to interact with influxDB
     - secret.py - stores Secret class containing confidential authentication data  
         &#8594; not uploaded to GitHub, recreate your own copy using [secret_copy.py](src/secret_copy.py)
 - [new-db.py](new-db.py): driver script for creating a new database using the specificed file's template (hard-coded)  
