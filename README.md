@@ -1,7 +1,6 @@
 # UMBS AmeriFlux Core Site Data Dashboard
 
 [Inspiration](https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafana/)   
-[Dashboard access](https://umbsflux.grafana.net/d/VyqSwgR7k/umbs-ameriflux-core-site?from=1623161110000&to=1623161190000&orgId=1) (only works for existing Grafana org members)
 
 
 ## Outline:  
@@ -19,20 +18,18 @@
 
 
 ## Use Guide:
-- Lines where changes need to occur for a new file type, etc. are led by the string ####admin
 - Write a bash script to upload a series of files to influxDB (after creating each new database, then continually upload the new files to it)
 - Database is used here as synonymous to influxDB's "bucket"
-- What changes need to be made for a new table  
-    - (admin1) DataTable.py - new derived class for table type, use commented template
-    - (admin2) FileManager.py - set rules of identifying this table type from a file name
-    - (admin3) define new retention policy if needed
-    - (admin4) config.py - define new configuration values if needed
+- Lines where changes need to occur for a new file type are led by the string ####admin  
+    - (####admin1) DataTable.py - new derived class for table type, use commented template
+    - (####admin2) FileManager.py - set rules of identifying this table type from a file name
+    - (####admin3) define new retention policy if needed
+    - (####admin4) config.py - define new configuration values if needed
 
 
 ## Data Flow:
 - Data goes from Campbell data loggers to tower PC
 - Run upload scripts from the tower PC
-    - Convert date in format (DOY, hour, minute) to a single field
     - Filter and/or clean data (basic stuff)
     - Convert to Pandas dataframe
 - If this is the first time using a specific database, it needs to be configured and created
