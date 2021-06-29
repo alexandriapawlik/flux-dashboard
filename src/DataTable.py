@@ -7,7 +7,6 @@ project: github.com/alexandriapawlik/flux-dashboard"""
 from datetime import datetime
 import pytz
 import pandas as pd
-import ciso8601  # TODO use for parsing dates (recommended by influxDB docs?)
 
 ############ base class
 
