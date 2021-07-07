@@ -2,6 +2,7 @@
 Python scripts to connect Campbell LoggerNet data to influxDB and Grafana 
 ([inspiration](https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafana/))    
 [Final product](https://umbsflux.grafana.net/d/VyqSwgR7k/umbs-ameriflux-stats?orgId=1&theme=dark) with permissioned access
+[Production code](https://github.com/um-biological-station/AmeriFlux-dashboard-sync) with permissioned access
 
 
 ## Outline:  
