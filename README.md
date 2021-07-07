@@ -1,6 +1,7 @@
 # a real-time dashboard for UMBS AmeriFlux Core Site data
 Python scripts to connect Campbell LoggerNet data to influxDB and Grafana 
-([inspiration](https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafana/))   
+([inspiration](https://ameriflux.lbl.gov/real-time-data-view-using-influxdb-and-grafana/))    
+[Final product](https://umbsflux.grafana.net/d/VyqSwgR7k/umbs-ameriflux-stats?orgId=1&theme=dark)
 
 
 ## Outline:  
