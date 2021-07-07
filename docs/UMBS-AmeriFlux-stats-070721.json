@@ -1,4 +1,52 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_INFLUXDB-AMERIFLUX",
+      "label": "InfluxDB-Ameriflux",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "influxdb",
+      "pluginName": "InfluxDB"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "8.0.4"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph (old)",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "influxdb",
+      "name": "InfluxDB",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -16,16 +64,30 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 4,
+  "id": null,
   "links": [],
   "panels": [
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 64,
+      "panels": [],
+      "title": "Header",
+      "type": "row"
+    },
     {
       "datasource": null,
       "gridPos": {
         "h": 5,
         "w": 9,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 23,
       "options": {
@@ -49,12 +111,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 5
+        "y": 6
       },
       "id": 12,
       "panels": [
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "sample air temperature at 46m, 34m, 15m; 10-minute average air temperature at 3m",
           "fieldConfig": {
             "defaults": {
@@ -171,7 +233,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 5
+            "y": 7
           },
           "id": 2,
           "interval": "5m",
@@ -363,7 +425,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "RH measured at 46m, 34m, 15m; 10-second average RH at 3m",
           "fieldConfig": {
             "defaults": {
@@ -481,7 +543,7 @@
             "h": 17,
             "w": 12,
             "x": 12,
-            "y": 5
+            "y": 7
           },
           "id": 4,
           "maxDataPoints": 8000,
@@ -540,7 +602,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "sonic temperature at 46m, 34m",
           "fieldConfig": {
             "defaults": {
@@ -627,7 +689,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 14
+            "y": 16
           },
           "id": 5,
           "interval": "5m",
@@ -760,12 +822,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 6
+        "y": 7
       },
       "id": 14,
       "panels": [
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "wind vector speed calculated from directional sonic wind speed at 46m, 34m; anemometer wind speed at 46m",
           "fieldConfig": {
             "defaults": {
@@ -853,7 +915,7 @@
             "h": 11,
             "w": 12,
             "x": 0,
-            "y": 23
+            "y": 25
           },
           "id": 7,
           "maxDataPoints": 8000,
@@ -913,7 +975,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "5-minute average wind vector speed calculated from directional sonic wind speed at 46m, 34m; anemometer wind speed at 46m",
           "fieldConfig": {
             "defaults": {
@@ -1001,7 +1063,7 @@
             "h": 11,
             "w": 12,
             "x": 12,
-            "y": 23
+            "y": 25
           },
           "id": 10,
           "maxDataPoints": 8000,
@@ -1071,12 +1133,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 7
+        "y": 8
       },
       "id": 16,
       "panels": [
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "CO2 concentration sampled at 46m and 34m",
           "fieldConfig": {
             "defaults": {
@@ -1160,7 +1222,7 @@
             "h": 10,
             "w": 12,
             "x": 0,
-            "y": 24
+            "y": 25
           },
           "id": 9,
           "options": {
@@ -1199,7 +1261,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "5-minute average CO2 concentration sampled at 46m and 34m",
           "fieldConfig": {
             "defaults": {
@@ -1283,7 +1345,7 @@
             "h": 10,
             "w": 12,
             "x": 12,
-            "y": 24
+            "y": 25
           },
           "id": 17,
           "options": {
@@ -1322,7 +1384,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "H2O concentration sampled at 46m and 34m",
           "fieldConfig": {
             "defaults": {
@@ -1406,7 +1468,7 @@
             "h": 10,
             "w": 12,
             "x": 0,
-            "y": 34
+            "y": 35
           },
           "id": 20,
           "options": {
@@ -1445,7 +1507,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "5-minute average H2O concentration sampled at 46m and 34m",
           "fieldConfig": {
             "defaults": {
@@ -1529,7 +1591,7 @@
             "h": 10,
             "w": 12,
             "x": 12,
-            "y": 34
+            "y": 35
           },
           "id": 21,
           "options": {
@@ -1578,7 +1640,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 9
       },
       "id": 19,
       "panels": [
@@ -1587,7 +1649,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "46m CO2 concentration vs sonic Uz wind speed ",
           "fill": 1,
           "fillGradient": 0,
@@ -1595,7 +1657,7 @@
             "h": 12,
             "w": 12,
             "x": 0,
-            "y": 25
+            "y": 9
           },
           "hiddenSeries": false,
           "id": 25,
@@ -1706,7 +1768,7 @@
           }
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "46m IRGA cell temperature output in mV, red if last returned value is below 1",
           "fieldConfig": {
             "defaults": {
@@ -1736,7 +1798,7 @@
             "h": 6,
             "w": 6,
             "x": 12,
-            "y": 25
+            "y": 9
           },
           "hideTimeOverride": false,
           "id": 27,
@@ -1770,7 +1832,7 @@
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "46m IRGA cell pressure output in mV, red if last returned value is below 1",
           "fieldConfig": {
             "defaults": {
@@ -1800,7 +1862,7 @@
             "h": 6,
             "w": 6,
             "x": 18,
-            "y": 25
+            "y": 9
           },
           "hideTimeOverride": true,
           "id": 30,
@@ -1833,7 +1895,7 @@
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "1-minute average mass flow at 46m, red if value is below 0.01",
           "fieldConfig": {
             "defaults": {
@@ -1863,7 +1925,7 @@
             "h": 6,
             "w": 6,
             "x": 12,
-            "y": 31
+            "y": 15
           },
           "hideTimeOverride": true,
           "id": 29,
@@ -1897,7 +1959,7 @@
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "H2O atmospheric concentration at 46m, red if last returned value is below 0.1",
           "fieldConfig": {
             "defaults": {
@@ -1927,7 +1989,7 @@
             "h": 6,
             "w": 6,
             "x": 18,
-            "y": 31
+            "y": 15
           },
           "hideTimeOverride": true,
           "id": 31,
@@ -1971,7 +2033,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 9
+        "y": 10
       },
       "id": 33,
       "panels": [
@@ -1980,7 +2042,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "34m CO2 concentration vs sonic Uz wind speed ",
           "fill": 1,
           "fillGradient": 0,
@@ -2103,7 +2165,7 @@
           }
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "34m IRGA cell temperature output in mV, red if last returned value is below 1",
           "fieldConfig": {
             "defaults": {
@@ -2167,7 +2229,7 @@
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "34m IRGA cell pressure output in mV, red if last returned value is below 1",
           "fieldConfig": {
             "defaults": {
@@ -2230,7 +2292,7 @@
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "1-minute average mass flow at 34m, red if value is below 0.01",
           "fieldConfig": {
             "defaults": {
@@ -2294,7 +2356,7 @@
           "type": "stat"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "H2O atmospheric concentration at 34m, red if last returned value is below 0.1",
           "fieldConfig": {
             "defaults": {
@@ -2367,12 +2429,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 10
+        "y": 11
       },
       "id": 40,
       "panels": [
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "Kipp & Zonen CNR1 radiation metrics measured at 46m",
           "fieldConfig": {
             "defaults": {
@@ -2486,7 +2548,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "Kipp & Zonen CNR1 radiation metrics measured at 46m",
           "fieldConfig": {
             "defaults": {
@@ -2626,7 +2688,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "LI-COR uncorrected PPFD, BF% Sun Shine sensor diffuse and total PPFD, all in micromoles per square meter per second",
           "fieldConfig": {
             "defaults": {
@@ -2779,7 +2841,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "LI-COR downward-facing PAR measured at 37m, in micromoles per square meter per second, red if last reported value is below 0.1",
           "fieldConfig": {
             "defaults": {
@@ -2848,12 +2910,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 11
+        "y": 12
       },
       "id": 49,
       "panels": [
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "Soil temperature measured at 5 different depths, averaged over 3 stations per depth",
           "fieldConfig": {
             "defaults": {
@@ -3131,7 +3193,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "Soil moisture measured at 3 different depths and 3 times over a range of depths (3 horizontal sensors and 3 vertical sensors), all in percent volume",
           "fieldConfig": {
             "defaults": {
@@ -3363,7 +3425,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "soil temperatures at 1m measured at 3 different stations",
           "fieldConfig": {
             "defaults": {
@@ -3521,7 +3583,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "soil temperatures at 50cm measured at 3 different stations",
           "fieldConfig": {
             "defaults": {
@@ -3679,7 +3741,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "soil temperatures at 20cm measured at 3 different stations",
           "fieldConfig": {
             "defaults": {
@@ -3837,7 +3899,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "soil temperatures at 7.5cm measured at 3 different stations",
           "fieldConfig": {
             "defaults": {
@@ -3995,7 +4057,7 @@
           "type": "timeseries"
         },
         {
-          "datasource": "InfluxDB-Ameriflux",
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
           "description": "soil temperatures at 2cm measured at 3 different stations",
           "fieldConfig": {
             "defaults": {
@@ -4155,6 +4217,717 @@
       ],
       "title": "Soil",
       "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 62,
+      "panels": [
+        {
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
+          "description": "sample air temperature at 46m, 34m, 15m; 10-minute average air temperature at 3m; all queried over 1 week and averaged over 1hr",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "left",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineStyle": {
+                  "fill": "solid"
+                },
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "celsius"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "46m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "34m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "15m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "3m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 14
+          },
+          "id": 67,
+          "interval": "5m",
+          "maxDataPoints": 8000,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi"
+            }
+          },
+          "pluginVersion": "8.0.3",
+          "targets": [
+            {
+              "groupBy": [
+                {
+                  "params": [
+                    "$__interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "hide": false,
+              "orderByTime": "ASC",
+              "policy": "default",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -7d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_46m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "46m",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
+            },
+            {
+              "groupBy": [
+                {
+                  "params": [
+                    "$__interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "hide": false,
+              "orderByTime": "ASC",
+              "policy": "default",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -7d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_34m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "34m",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
+            },
+            {
+              "groupBy": [
+                {
+                  "params": [
+                    "$__interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "hide": false,
+              "orderByTime": "ASC",
+              "policy": "default",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -7d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_15m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "15m",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
+            },
+            {
+              "groupBy": [
+                {
+                  "params": [
+                    "$__interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "hide": false,
+              "orderByTime": "ASC",
+              "policy": "default",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -7d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_avg_3m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "3m",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Average Air Temperature by Height",
+          "transformations": [
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "(Temp_)",
+                "renamePattern": ""
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "(avg_)",
+                "renamePattern": ""
+              }
+            }
+          ],
+          "type": "timeseries"
+        },
+        {
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
+          "description": "RH measured at 46m, 34m, 15m; 10-second average RH at 3m",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "humidity"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "46m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "34m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "15m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "3m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 14,
+            "w": 12,
+            "x": 12,
+            "y": 14
+          },
+          "id": 69,
+          "maxDataPoints": 8000,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi"
+            }
+          },
+          "targets": [
+            {
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -7d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_46m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "46m"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -7d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_34m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "34m"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -7d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_15m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "15m"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -7d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_avg_3m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "3m"
+            }
+          ],
+          "title": "Relative Humidity by Height",
+          "transformations": [
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "(RH_)",
+                "renamePattern": ""
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "(avg_)",
+                "renamePattern": ""
+              }
+            }
+          ],
+          "type": "timeseries"
+        },
+        {
+          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
+          "description": "sonic temperature at 46m, 34m; queried over 1 week and averaged over 1hr",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "left",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineStyle": {
+                  "fill": "solid"
+                },
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "celsius"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Sonic 46m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Sonic 34m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 7,
+            "w": 12,
+            "x": 0,
+            "y": 21
+          },
+          "id": 68,
+          "interval": "5m",
+          "maxDataPoints": 8000,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi"
+            }
+          },
+          "pluginVersion": "8.0.3",
+          "targets": [
+            {
+              "groupBy": [
+                {
+                  "params": [
+                    "$__interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "hide": false,
+              "orderByTime": "ASC",
+              "policy": "default",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -7d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Sonic_temp_46m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "46m sonic",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
+            },
+            {
+              "groupBy": [
+                {
+                  "params": [
+                    "$__interval"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "null"
+                  ],
+                  "type": "fill"
+                }
+              ],
+              "hide": false,
+              "orderByTime": "ASC",
+              "policy": "default",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -7d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Sonic_temp_34m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "34m sonic",
+              "resultFormat": "time_series",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "field"
+                  },
+                  {
+                    "params": [],
+                    "type": "mean"
+                  }
+                ]
+              ],
+              "tags": []
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Average Sonic Air Temperature by Height",
+          "transformations": [
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "(Temp_)",
+                "renamePattern": ""
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "(_temp_)",
+                "renamePattern": " "
+              }
+            },
+            {
+              "id": "renameByRegex",
+              "options": {
+                "regex": "(avg_)",
+                "renamePattern": ""
+              }
+            }
+          ],
+          "type": "timeseries"
+        }
+      ],
+      "title": "Weekly Graphs",
+      "type": "row"
     }
   ],
   "refresh": false,
@@ -4170,14 +4943,10 @@
   },
   "timepicker": {
     "nowDelay": "",
-    "refresh_intervals": [
-      "1m",
-      "5m",
-      "10m"
-    ]
+    "refresh_intervals": []
   },
   "timezone": "",
   "title": "UMBS AmeriFlux stats",
   "uid": "VyqSwgR7k",
-  "version": 72
+  "version": 76
 }
