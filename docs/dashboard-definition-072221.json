@@ -7,27 +7,6 @@
       "type": "datasource",
       "pluginId": "influxdb",
       "pluginName": "InfluxDB"
-    },
-    {
-      "name": "VAR_DAYSTOQUERY",
-      "type": "constant",
-      "label": "daysToQuery",
-      "value": "7",
-      "description": ""
-    },
-    {
-      "name": "VAR_SOILDAYSTOQUERY",
-      "type": "constant",
-      "label": "soilDaysToQuery",
-      "value": "7",
-      "description": ""
-    },
-    {
-      "name": "VAR_LONGDAYSTOQUERY",
-      "type": "constant",
-      "label": "longDaysToQuery",
-      "value": "7",
-      "description": ""
     }
   ],
   "__requires": [
@@ -86,7 +65,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1626900062246,
+  "iteration": 1626976191235,
   "links": [],
   "panels": [
     {
@@ -107,36 +86,13 @@
       "datasource": null,
       "gridPos": {
         "h": 5,
-        "w": 13,
+        "w": 15,
         "x": 0,
-        "y": 1
-      },
-      "id": 74,
-      "options": {
-        "content": "- data began uploading on July 6th, so no data are older\n- queries only go back ${daysToQuery} days, so changing the time frame won't get data older than that  \n  - soil data queries go back ${soilDaysToQuery}\n- all data are retained 7 days, except soil data which is retained 30 days\n- GitHub code (requires GitHub account and UMBS org access): https://github.com/um-biological-station/AmeriFlux-dashboard-sync",
-        "mode": "markdown"
-      },
-      "pluginVersion": "8.0.6",
-      "targets": [
-        {
-          "queryType": "randomWalk",
-          "refId": "A"
-        }
-      ],
-      "title": "Details",
-      "type": "text"
-    },
-    {
-      "datasource": null,
-      "gridPos": {
-        "h": 5,
-        "w": 11,
-        "x": 13,
         "y": 1
       },
       "id": 23,
       "options": {
-        "content": "- drag over a zone to zoom in\n- click on names in the legend to view the trendline alone\n- only view one dropdown at a time so that data loads faster\n- if a graph isn't showing any data, try changing the time range and refreshing     \n- click the i in the top left corner of a graph for a description of where the data are from and, if averaged, over what time period\n",
+        "content": "- drag over a zone to zoom in\n- click on names in the legend to view the trendline alone\n- only view one dropdown at a time so that data loads faster    \n- click the i in the top left corner of a graph for a description of where the data are from and, if averaged, over what time period\n- if graph says, \"data does not have a time field\", then the selected time range does not contain any data for that query",
         "mode": "markdown"
       },
       "pluginVersion": "8.0.6",
@@ -147,6 +103,29 @@
         }
       ],
       "title": "Instructions",
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "gridPos": {
+        "h": 5,
+        "w": 9,
+        "x": 15,
+        "y": 1
+      },
+      "id": 74,
+      "options": {
+        "content": "- data began uploading on July 6th, so no data are older\n- queries only go back as far as the time frame specified in the top right\n- all data are retained 7 days, except soil data which is retained 30 days\n- GitHub code (requires GitHub account and UMBS org access): https://github.com/um-biological-station/AmeriFlux-dashboard-sync",
+        "mode": "markdown"
+      },
+      "pluginVersion": "8.0.6",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "title": "Details",
       "type": "text"
     },
     {
@@ -313,7 +292,7 @@
               "hide": false,
               "orderByTime": "ASC",
               "policy": "default",
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_46m\"\n  )",
               "queryType": "randomWalk",
               "refId": "46m",
               "resultFormat": "time_series",
@@ -351,7 +330,7 @@
               "hide": false,
               "orderByTime": "ASC",
               "policy": "default",
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_34m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_34m\"\n  )",
               "queryType": "randomWalk",
               "refId": "34m",
               "resultFormat": "time_series",
@@ -389,7 +368,7 @@
               "hide": false,
               "orderByTime": "ASC",
               "policy": "default",
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_15m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_15m\"\n  )",
               "queryType": "randomWalk",
               "refId": "15m",
               "resultFormat": "time_series",
@@ -427,7 +406,7 @@
               "hide": false,
               "orderByTime": "ASC",
               "policy": "default",
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_avg_3m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_avg_3m\"\n  )",
               "queryType": "randomWalk",
               "refId": "3m",
               "resultFormat": "time_series",
@@ -604,25 +583,25 @@
           },
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_46m\"\n  )",
               "queryType": "randomWalk",
               "refId": "46m"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_34m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_34m\"\n  )",
               "queryType": "randomWalk",
               "refId": "34m"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_15m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_15m\"\n  )",
               "queryType": "randomWalk",
               "refId": "15m"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_avg_3m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_avg_3m\"\n  )",
               "queryType": "randomWalk",
               "refId": "3m"
             }
@@ -769,7 +748,7 @@
               "hide": false,
               "orderByTime": "ASC",
               "policy": "default",
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Sonic_temp_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Sonic_temp_46m\"\n  )",
               "queryType": "randomWalk",
               "refId": "46m sonic",
               "resultFormat": "time_series",
@@ -807,7 +786,7 @@
               "hide": false,
               "orderByTime": "ASC",
               "policy": "default",
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Sonic_temp_34m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Sonic_temp_34m\"\n  )",
               "queryType": "randomWalk",
               "refId": "34m sonic",
               "resultFormat": "time_series",
@@ -976,19 +955,19 @@
           },
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"U_wind_speed_46m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"U_wind_speed_46m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"U_wind_speed_34m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"U_wind_speed_34m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
               "queryType": "randomWalk",
               "refId": "B"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Wind_speed_46m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Wind_speed_46m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
               "queryType": "randomWalk",
               "refId": "C"
             }
@@ -1036,7 +1015,7 @@
       "panels": [
         {
           "datasource": "${DS_INFLUXDB-AMERIFLUX}",
-          "description": "CO2 concentration sampled at 46m and 34m",
+          "description": "CO2 concentration sampled at 46m, 34m, 22m, 7m, 3m, 0m; 0-22m sensors only record in rotation (one at a time)",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1108,6 +1087,66 @@
                     "id": "color",
                     "value": {
                       "fixedColor": "light-yellow",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "22m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "7m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "3m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "0m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-blue",
                       "mode": "fixed"
                     }
                   }
@@ -1135,15 +1174,39 @@
           },
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_46m\"\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_34m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_34m\"\n  )",
               "queryType": "randomWalk",
               "refId": "B"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_22m\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "C"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_7m\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "D"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_3m\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "E"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_0m\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "F"
             }
           ],
           "title": "CO2 Concentration by Height",
@@ -1160,7 +1223,7 @@
         },
         {
           "datasource": "${DS_INFLUXDB-AMERIFLUX}",
-          "description": "5-minute average CO2 concentration sampled at 46m and 34m",
+          "description": "10-minute average CO2 concentration sampled at 46m, 34m, 22m, 7m, 3m, 0m; 0-22m sensors only record in rotation (one at a time)",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1236,6 +1299,66 @@
                     }
                   }
                 ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "22m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "7m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "3m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "0m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
               }
             ]
           },
@@ -1258,15 +1381,39 @@
           },
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_46m\"\n  )\n  |> aggregateWindow(\n    every: 5m,\n    fn: mean\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_46m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_34m\"\n  )\n  |> aggregateWindow(\n    every: 5m,\n    fn: mean\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_34m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
               "queryType": "randomWalk",
               "refId": "B"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_22m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "C"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_7m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "D"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_3m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "E"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_0m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "F"
             }
           ],
           "title": "Average CO2 Concentration by Height",
@@ -1283,7 +1430,7 @@
         },
         {
           "datasource": "${DS_INFLUXDB-AMERIFLUX}",
-          "description": "H2O concentration sampled at 46m and 34m",
+          "description": "H2O concentration sampled at 46m, 34m, 22m, 7m, 3m, 0m; 0-22m sensors only record in rotation (one at a time)",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1359,6 +1506,66 @@
                     }
                   }
                 ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "22m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "7m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "3m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "0m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
               }
             ]
           },
@@ -1368,7 +1575,7 @@
             "x": 0,
             "y": 19
           },
-          "id": 20,
+          "id": 75,
           "maxDataPoints": 8000,
           "options": {
             "legend": {
@@ -1382,15 +1589,39 @@
           },
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_46m\"\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_34m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_34m\"\n  )",
               "queryType": "randomWalk",
               "refId": "B"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_22m\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "C"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_7m\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "D"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_3m\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "E"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_0m\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "F"
             }
           ],
           "title": "H2O Concentration by Height",
@@ -1407,7 +1638,7 @@
         },
         {
           "datasource": "${DS_INFLUXDB-AMERIFLUX}",
-          "description": "5-minute average H2O concentration sampled at 46m and 34m",
+          "description": "10-minute average H2O concentration sampled at 46m, 34m, 22m, 7m, 3m, 0m; 0-22m sensors only record in rotation (one at a time)",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -1483,6 +1714,66 @@
                     }
                   }
                 ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "22m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-green",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "7m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-purple",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "3m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-orange",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "0m"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "light-blue",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
               }
             ]
           },
@@ -1492,7 +1783,7 @@
             "x": 12,
             "y": 19
           },
-          "id": 21,
+          "id": 76,
           "options": {
             "legend": {
               "calcs": [],
@@ -1505,15 +1796,39 @@
           },
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_46m\"\n  )\n  |> aggregateWindow(\n    every: 5m,\n    fn: mean\n  )\n  ",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_46m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_34m\"\n  )\n  |> aggregateWindow(\n    every: 5m,\n    fn: mean\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_34m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
               "queryType": "randomWalk",
               "refId": "B"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_22m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "C"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_7m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "D"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_3m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "E"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"H2O_0m\"\n  )\n  |> aggregateWindow(\n    every: 10m,\n    fn: mean\n  )",
+              "queryType": "randomWalk",
+              "refId": "F"
             }
           ],
           "title": "Average H2O Concentration by Height",
@@ -1596,13 +1911,13 @@
           "steppedLine": false,
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_46m\"\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Uz_46m\"\n  )\n  |> aggregateWindow(\n    every: 1m,\n    fn: mean\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Uz_46m\"\n  )\n  |> aggregateWindow(\n    every: 1m,\n    fn: mean\n  )",
               "queryType": "randomWalk",
               "refId": "B"
             }
@@ -1754,7 +2069,7 @@
           "pluginVersion": "8.0.6",
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Cell_temp_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Cell_temp_46m\"\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             }
@@ -1849,7 +2164,7 @@
           "pluginVersion": "8.0.6",
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Cell_pressure_46m\"\n  )\n",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Cell_pressure_46m\"\n  )\n",
               "queryType": "randomWalk",
               "refId": "A"
             }
@@ -1887,7 +2202,7 @@
             "h": 12,
             "w": 14,
             "x": 0,
-            "y": 23
+            "y": 31
           },
           "hiddenSeries": false,
           "id": 34,
@@ -1931,13 +2246,13 @@
           "steppedLine": false,
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_34m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"CO2_34m\"\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Uz_34m\"\n  )\n  |> aggregateWindow(\n    every: 1m,\n    fn: mean\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Uz_34m\"\n  )\n  |> aggregateWindow(\n    every: 1m,\n    fn: mean\n  )",
               "queryType": "randomWalk",
               "refId": "B"
             }
@@ -2069,7 +2384,7 @@
             "h": 6,
             "w": 10,
             "x": 14,
-            "y": 23
+            "y": 31
           },
           "hideTimeOverride": false,
           "id": 35,
@@ -2088,7 +2403,7 @@
           "pluginVersion": "8.0.6",
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Cell_temp_34m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Cell_temp_34m\"\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             }
@@ -2165,7 +2480,7 @@
             "h": 6,
             "w": 10,
             "x": 14,
-            "y": 29
+            "y": 37
           },
           "hideTimeOverride": true,
           "id": 36,
@@ -2183,7 +2498,7 @@
           "pluginVersion": "8.0.6",
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Cell_pressure_34m\"\n  )\n",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Cell_pressure_34m\"\n  )\n",
               "queryType": "randomWalk",
               "refId": "A"
             }
@@ -2278,30 +2593,30 @@
           },
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Incident_solar_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Incident_solar_46m\"\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Reflected_solar_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Reflected_solar_46m\"\n  )",
               "queryType": "randomWalk",
               "refId": "B"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Net_radiation_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Net_radiation_46m\"\n  )",
               "queryType": "randomWalk",
               "refId": "E"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Incident_far_red_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Incident_far_red_46m\"\n  )",
               "refId": "C"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Outgoing_far_red_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Outgoing_far_red_46m\"\n  )",
               "refId": "D"
             }
           ],
@@ -2448,19 +2763,19 @@
           "targets": [
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"PPFD_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"PPFD_46m\"\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Diffuse_PPFD_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Diffuse_PPFD_46m\"\n  )",
               "queryType": "randomWalk",
               "refId": "B"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Total_PPFD_46m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Total_PPFD_46m\"\n  )",
               "queryType": "randomWalk",
               "refId": "C"
             }
@@ -2535,7 +2850,7 @@
           "pluginVersion": "8.0.6",
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${daysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Downward_PAR_37m\"\n  )",
+              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Downward_PAR_37m\"\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             }
@@ -2726,31 +3041,31 @@
           "targets": [
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field =~ /Soil_temp_2cm/\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field =~ /Soil_temp_2cm/\n  )",
               "queryType": "randomWalk",
               "refId": "2cm"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field =~ /Soil_temp_7.5cm/\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field =~ /Soil_temp_7.5cm/\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field =~ /Soil_temp_20cm/\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field =~ /Soil_temp_20cm/\n  )",
               "queryType": "randomWalk",
               "refId": "B"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field =~ /Soil_temp_50cm/\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field =~ /Soil_temp_50cm/\n  )",
               "queryType": "randomWalk",
               "refId": "C"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field =~ /Soil_temp_1m/\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field =~ /Soil_temp_1m/\n  )",
               "queryType": "randomWalk",
               "refId": "D"
             }
@@ -2761,43 +3076,13 @@
             {
               "id": "calculateField",
               "options": {
-                "alias": "1m",
+                "alias": "2cm",
                 "mode": "reduceRow",
                 "reduce": {
                   "include": [
-                    "Soil_temp_1m_st3 slowdata",
-                    "Soil_temp_1m_st1 slowdata",
-                    "Soil_temp_1m_st2 slowdata"
-                  ],
-                  "reducer": "mean"
-                }
-              }
-            },
-            {
-              "id": "calculateField",
-              "options": {
-                "alias": "50cm",
-                "mode": "reduceRow",
-                "reduce": {
-                  "include": [
-                    "Soil_temp_50cm_st1 slowdata",
-                    "Soil_temp_50cm_st2 slowdata",
-                    "Soil_temp_50cm_st3 slowdata"
-                  ],
-                  "reducer": "mean"
-                }
-              }
-            },
-            {
-              "id": "calculateField",
-              "options": {
-                "alias": "20cm",
-                "mode": "reduceRow",
-                "reduce": {
-                  "include": [
-                    "Soil_temp_20cm_st2 slowdata",
-                    "Soil_temp_20cm_st3 slowdata",
-                    "Soil_temp_20cm_st1 slowdata"
+                    "Soil_temp_2cm_st2 slowdata",
+                    "Soil_temp_2cm_st1 slowdata",
+                    "Soil_temp_2cm_st3 slowdata"
                   ],
                   "reducer": "mean"
                 }
@@ -2821,13 +3106,43 @@
             {
               "id": "calculateField",
               "options": {
-                "alias": "2cm",
+                "alias": "20cm",
                 "mode": "reduceRow",
                 "reduce": {
                   "include": [
-                    "Soil_temp_2cm_st2 slowdata",
-                    "Soil_temp_2cm_st1 slowdata",
-                    "Soil_temp_2cm_st3 slowdata"
+                    "Soil_temp_20cm_st2 slowdata",
+                    "Soil_temp_20cm_st3 slowdata",
+                    "Soil_temp_20cm_st1 slowdata"
+                  ],
+                  "reducer": "mean"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "50cm",
+                "mode": "reduceRow",
+                "reduce": {
+                  "include": [
+                    "Soil_temp_50cm_st1 slowdata",
+                    "Soil_temp_50cm_st2 slowdata",
+                    "Soil_temp_50cm_st3 slowdata"
+                  ],
+                  "reducer": "mean"
+                }
+              }
+            },
+            {
+              "id": "calculateField",
+              "options": {
+                "alias": "1m",
+                "mode": "reduceRow",
+                "reduce": {
+                  "include": [
+                    "Soil_temp_1m_st3 slowdata",
+                    "Soil_temp_1m_st1 slowdata",
+                    "Soil_temp_1m_st2 slowdata"
                   ],
                   "reducer": "mean"
                 }
@@ -2999,37 +3314,37 @@
           "targets": [
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_moisture_30cm\"\n  )",
-              "queryType": "randomWalk",
-              "refId": "30cm"
-            },
-            {
-              "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_moisture_15cm\"\n  )",
-              "queryType": "randomWalk",
-              "refId": "15cm"
-            },
-            {
-              "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_moisture_5cm\"\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_moisture_5cm\"\n  )",
               "queryType": "randomWalk",
               "refId": "5cm"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_moisture_0-30cm_1\"\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_moisture_15cm\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "15cm"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_moisture_30cm\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "30cm"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_moisture_0-30cm_1\"\n  )",
               "queryType": "randomWalk",
               "refId": "A"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_moisture_0-30cm_2\"\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_moisture_0-30cm_2\"\n  )",
               "queryType": "randomWalk",
               "refId": "B"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_moisture_0-30cm_3\"\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_moisture_0-30cm_3\"\n  )",
               "queryType": "randomWalk",
               "refId": "C"
             }
@@ -3214,33 +3529,33 @@
           },
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_1m_st1\"\n  )",
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_2cm_st1\"\n  )",
               "queryType": "randomWalk",
-              "refId": "A"
+              "refId": "E"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_50cm_st1\"\n  )",
-              "queryType": "randomWalk",
-              "refId": "B"
-            },
-            {
-              "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_20cm_st1\"\n  )",
-              "queryType": "randomWalk",
-              "refId": "C"
-            },
-            {
-              "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_7.5cm_st1\"\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_7.5cm_st1\"\n  )",
               "queryType": "randomWalk",
               "refId": "D"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_2cm_st1\"\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_20cm_st1\"\n  )",
               "queryType": "randomWalk",
-              "refId": "E"
+              "refId": "C"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_50cm_st1\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "B"
+            },
+            {
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_1m_st1\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "A"
             }
           ],
           "title": "Soil Temperature at Station 1",
@@ -3408,33 +3723,33 @@
           },
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_1m_st2\"\n  )",
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_2cm_st2\"\n  )",
               "queryType": "randomWalk",
-              "refId": "A"
+              "refId": "E"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_50cm_st2\"\n  )",
-              "queryType": "randomWalk",
-              "refId": "B"
-            },
-            {
-              "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_20cm_st2\"\n  )",
-              "queryType": "randomWalk",
-              "refId": "C"
-            },
-            {
-              "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_7.5cm_st2\"\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_7.5cm_st2\"\n  )",
               "queryType": "randomWalk",
               "refId": "D"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_2cm_st2\"\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_20cm_st2\"\n  )",
               "queryType": "randomWalk",
-              "refId": "E"
+              "refId": "C"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_50cm_st2\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "B"
+            },
+            {
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_1m_st2\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "A"
             }
           ],
           "title": "Soil Temperature at Station 2",
@@ -3602,33 +3917,33 @@
           },
           "targets": [
             {
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_1m_st3\"\n  )",
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_2cm_st3\"\n  )",
               "queryType": "randomWalk",
-              "refId": "A"
+              "refId": "E"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_50cm_st3\"\n  )",
-              "queryType": "randomWalk",
-              "refId": "B"
-            },
-            {
-              "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_20cm_st3\"\n  )",
-              "queryType": "randomWalk",
-              "refId": "C"
-            },
-            {
-              "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_7.5cm_st3\"\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_7.5cm_st3\"\n  )",
               "queryType": "randomWalk",
               "refId": "D"
             },
             {
               "hide": false,
-              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: -${soilDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_2cm_st3\"\n  )",
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_20cm_st3\"\n  )",
               "queryType": "randomWalk",
-              "refId": "E"
+              "refId": "C"
+            },
+            {
+              "hide": false,
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_50cm_st3\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "B"
+            },
+            {
+              "query": "from(bucket: \"ameriflux_soil\")\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) =>\n    r._measurement == \"slowdata\" and\n    r._field == \"Soil_temp_1m_st3\"\n  )",
+              "queryType": "randomWalk",
+              "refId": "A"
             }
           ],
           "title": "Soil Temperature at Station 3",
@@ -3653,717 +3968,6 @@
       ],
       "title": "Soil",
       "type": "row"
-    },
-    {
-      "collapsed": true,
-      "datasource": null,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 13
-      },
-      "id": 62,
-      "panels": [
-        {
-          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
-          "description": "sample air temperature at 46m, 34m, 15m; 10-minute average air temperature at 3m; all averaged over 1hr",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisLabel": "",
-                "axisPlacement": "left",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineStyle": {
-                  "fill": "solid"
-                },
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": true,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  }
-                ]
-              },
-              "unit": "celsius"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "46m"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "light-red",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "34m"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "light-yellow",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "15m"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "light-green",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "3m"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "light-blue",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 7,
-            "w": 12,
-            "x": 0,
-            "y": 15
-          },
-          "id": 67,
-          "interval": "5m",
-          "maxDataPoints": 8000,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom"
-            },
-            "tooltip": {
-              "mode": "multi"
-            }
-          },
-          "pluginVersion": "8.0.3",
-          "targets": [
-            {
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "hide": false,
-              "orderByTime": "ASC",
-              "policy": "default",
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${longDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_46m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
-              "queryType": "randomWalk",
-              "refId": "46m",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": []
-            },
-            {
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "hide": false,
-              "orderByTime": "ASC",
-              "policy": "default",
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${longDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_34m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
-              "queryType": "randomWalk",
-              "refId": "34m",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": []
-            },
-            {
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "hide": false,
-              "orderByTime": "ASC",
-              "policy": "default",
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${longDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_15m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
-              "queryType": "randomWalk",
-              "refId": "15m",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": []
-            },
-            {
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "hide": false,
-              "orderByTime": "ASC",
-              "policy": "default",
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${longDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Temp_avg_3m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
-              "queryType": "randomWalk",
-              "refId": "3m",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": []
-            }
-          ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Average Air Temperature by Height",
-          "transformations": [
-            {
-              "id": "renameByRegex",
-              "options": {
-                "regex": "(Temp_)",
-                "renamePattern": ""
-              }
-            },
-            {
-              "id": "renameByRegex",
-              "options": {
-                "regex": "(avg_)",
-                "renamePattern": ""
-              }
-            }
-          ],
-          "type": "timeseries"
-        },
-        {
-          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
-          "description": "RH measured at 46m, 34m, 15m; 10-second average RH at 3m; all averaged over 1hr",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "humidity"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "46m"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "light-red",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "34m"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "light-yellow",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "15m"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "light-green",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "3m"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "light-blue",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 14,
-            "w": 12,
-            "x": 12,
-            "y": 15
-          },
-          "id": 69,
-          "maxDataPoints": 8000,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom"
-            },
-            "tooltip": {
-              "mode": "multi"
-            }
-          },
-          "targets": [
-            {
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${longDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_46m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
-              "queryType": "randomWalk",
-              "refId": "46m"
-            },
-            {
-              "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${longDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_34m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
-              "queryType": "randomWalk",
-              "refId": "34m"
-            },
-            {
-              "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${longDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_15m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
-              "queryType": "randomWalk",
-              "refId": "15m"
-            },
-            {
-              "hide": false,
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${longDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"RH_avg_3m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
-              "queryType": "randomWalk",
-              "refId": "3m"
-            }
-          ],
-          "title": "Average Relative Humidity by Height",
-          "transformations": [
-            {
-              "id": "renameByRegex",
-              "options": {
-                "regex": "(RH_)",
-                "renamePattern": ""
-              }
-            },
-            {
-              "id": "renameByRegex",
-              "options": {
-                "regex": "(avg_)",
-                "renamePattern": ""
-              }
-            }
-          ],
-          "type": "timeseries"
-        },
-        {
-          "datasource": "${DS_INFLUXDB-AMERIFLUX}",
-          "description": "sonic temperature at 46m, 34m; all averaged over 1hr",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisLabel": "",
-                "axisPlacement": "left",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineStyle": {
-                  "fill": "solid"
-                },
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": true,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  }
-                ]
-              },
-              "unit": "celsius"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Sonic 46m"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "light-red",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Sonic 34m"
-                },
-                "properties": [
-                  {
-                    "id": "color",
-                    "value": {
-                      "fixedColor": "light-yellow",
-                      "mode": "fixed"
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 7,
-            "w": 12,
-            "x": 0,
-            "y": 22
-          },
-          "id": 68,
-          "interval": "5m",
-          "maxDataPoints": 8000,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom"
-            },
-            "tooltip": {
-              "mode": "multi"
-            }
-          },
-          "pluginVersion": "8.0.3",
-          "targets": [
-            {
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "hide": false,
-              "orderByTime": "ASC",
-              "policy": "default",
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${longDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Sonic_temp_46m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
-              "queryType": "randomWalk",
-              "refId": "46m sonic",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": []
-            },
-            {
-              "groupBy": [
-                {
-                  "params": [
-                    "$__interval"
-                  ],
-                  "type": "time"
-                },
-                {
-                  "params": [
-                    "null"
-                  ],
-                  "type": "fill"
-                }
-              ],
-              "hide": false,
-              "orderByTime": "ASC",
-              "policy": "default",
-              "query": "from(bucket: \"ameriflux_atmospheric\")\n  |> range(start: -${longDaysToQuery}d)\n  |> filter(fn: (r) =>\n    r._measurement == \"fastdata\" and\n    r._field == \"Sonic_temp_34m\"\n  )\n  |> aggregateWindow(\n    every: 1h,\n    fn: mean\n  )",
-              "queryType": "randomWalk",
-              "refId": "34m sonic",
-              "resultFormat": "time_series",
-              "select": [
-                [
-                  {
-                    "params": [
-                      "value"
-                    ],
-                    "type": "field"
-                  },
-                  {
-                    "params": [],
-                    "type": "mean"
-                  }
-                ]
-              ],
-              "tags": []
-            }
-          ],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Average Sonic Air Temperature by Height",
-          "transformations": [
-            {
-              "id": "renameByRegex",
-              "options": {
-                "regex": "(Temp_)",
-                "renamePattern": ""
-              }
-            },
-            {
-              "id": "renameByRegex",
-              "options": {
-                "regex": "(_temp_)",
-                "renamePattern": " "
-              }
-            },
-            {
-              "id": "renameByRegex",
-              "options": {
-                "regex": "(avg_)",
-                "renamePattern": ""
-              }
-            }
-          ],
-          "type": "timeseries"
-        }
-      ],
-      "title": "Weekly Graphs",
-      "type": "row"
     }
   ],
   "refresh": false,
@@ -4371,77 +3975,10 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": [
-      {
-        "description": "Number of days back to query data",
-        "error": null,
-        "hide": 2,
-        "label": "",
-        "name": "daysToQuery",
-        "query": "${VAR_DAYSTOQUERY}",
-        "skipUrlSync": false,
-        "type": "constant",
-        "current": {
-          "value": "${VAR_DAYSTOQUERY}",
-          "text": "${VAR_DAYSTOQUERY}",
-          "selected": false
-        },
-        "options": [
-          {
-            "value": "${VAR_DAYSTOQUERY}",
-            "text": "${VAR_DAYSTOQUERY}",
-            "selected": false
-          }
-        ]
-      },
-      {
-        "description": "number of days back to query soil data",
-        "error": null,
-        "hide": 2,
-        "label": null,
-        "name": "soilDaysToQuery",
-        "query": "${VAR_SOILDAYSTOQUERY}",
-        "skipUrlSync": false,
-        "type": "constant",
-        "current": {
-          "value": "${VAR_SOILDAYSTOQUERY}",
-          "text": "${VAR_SOILDAYSTOQUERY}",
-          "selected": false
-        },
-        "options": [
-          {
-            "value": "${VAR_SOILDAYSTOQUERY}",
-            "text": "${VAR_SOILDAYSTOQUERY}",
-            "selected": false
-          }
-        ]
-      },
-      {
-        "description": "number of days back to query data for long-term averages graphs",
-        "error": null,
-        "hide": 2,
-        "label": null,
-        "name": "longDaysToQuery",
-        "query": "${VAR_LONGDAYSTOQUERY}",
-        "skipUrlSync": false,
-        "type": "constant",
-        "current": {
-          "value": "${VAR_LONGDAYSTOQUERY}",
-          "text": "${VAR_LONGDAYSTOQUERY}",
-          "selected": false
-        },
-        "options": [
-          {
-            "value": "${VAR_LONGDAYSTOQUERY}",
-            "text": "${VAR_LONGDAYSTOQUERY}",
-            "selected": false
-          }
-        ]
-      }
-    ]
+    "list": []
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {
@@ -4451,5 +3988,5 @@
   "timezone": "",
   "title": "UMBS AmeriFlux stats",
   "uid": "VyqSwgR7k",
-  "version": 100
+  "version": 112
 }
